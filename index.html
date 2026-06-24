@@ -3,427 +3,604 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>P/L Report</title>
+<title>Reports – P/L Report</title>
 <style>
-  :root{
-    --green:#7cb342;
-    --orange:#e8823f;
-    --blue:#4f86c6;
-    --gray-dot:#b0b6bd;
-    --text-dark:#1f2430;
-    --text-mid:#4b5563;
-    --text-label:#8a9099;
-    --border:#e7e9ec;
-    --bg-page:#f3f4f6;
-    --bg-card:#ffffff;
-  }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f2f5;color:#1f2430;font-size:14px;min-height:100vh;}
 
-  *{ box-sizing:border-box; }
+/* ── Top bar ── */
+.topbar{display:flex;align-items:center;gap:18px;background:#fff;padding:0 28px;height:58px;border-bottom:1px solid #e2e5ea;position:sticky;top:0;z-index:300;}
+.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:20px;height:2px;background:#555;border-radius:2px;}
+.topbar-title{font-size:17px;font-weight:800;letter-spacing:.3px;color:#1f2430;}
 
-  body{
-    margin:0;
-    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background:var(--bg-page);
-    color:var(--text-dark);
-    padding:32px 16px;
-  }
+/* ── Tab nav ── */
+.tabnav{background:#fff;border-bottom:1px solid #e2e5ea;display:flex;justify-content:center;gap:0;padding:0 28px;}
+.tab{padding:16px 22px;font-size:13px;font-weight:700;letter-spacing:.4px;color:#8a94a6;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;}
+.tab:hover{color:#2563eb;}
+.tab.active{color:#2563eb;border-bottom-color:#2563eb;}
 
-  .panel{
-    max-width:1090px;
-    margin:0 auto;
-    background:var(--bg-card);
-    border-radius:14px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.06);
-    padding:28px 32px 36px;
-  }
+/* ── Page body ── */
+.page{max-width:1140px;margin:0 auto;padding:32px 24px 60px;}
+.page-title{font-size:22px;font-weight:800;margin-bottom:24px;color:#1f2430;}
 
-  /* ---------- Header ---------- */
-  .header-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:24px;
-  }
+/* ── Filter pill / panel ── */
+.filter-wrap{position:relative;margin-bottom:24px;}
+.filter-pill{display:flex;align-items:center;gap:10px;border:1px solid #dde1e9;border-radius:8px;padding:10px 16px;background:#fff;cursor:pointer;width:380px;user-select:none;transition:border-color .15s;}
+.filter-pill:hover{border-color:#2563eb;}
+.filter-pill svg{flex-shrink:0;color:#8a94a6;}
+.filter-pill-label{flex:1;font-size:13px;color:#6b7280;font-weight:500;}
+.filter-pill .chev{transition:transform .2s;color:#8a94a6;}
+.filter-wrap.open .filter-pill .chev{transform:rotate(180deg);}
+.filter-wrap.open .filter-pill{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
 
-  .header-row h1{
-    font-size:22px;
-    font-weight:700;
-    letter-spacing:0.3px;
-    margin:0;
-  }
+.filter-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;width:680px;background:#fff;border:1px solid #dde1e9;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.10);padding:24px;z-index:250;}
+.filter-wrap.open .filter-panel{display:block;}
 
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:9px 16px;
-    font-size:14px;
-    font-weight:600;
-    color:var(--text-dark);
-    cursor:pointer;
-  }
+.fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-bottom:20px;}
+.fp-full{grid-column:1/-1;}
+.fp-label{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;}
+.fp-label span{color:#2563eb;}/* for "Select Year" blue label */
+.fp-select{width:100%;padding:9px 36px 9px 12px;border:1px solid #dde1e9;border-radius:8px;background:#fff;font-size:13px;color:#374151;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;font-family:inherit;transition:border-color .15s;}
+.fp-select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+.fp-select.gray-bg{background-color:#f7f8fa;}
 
-  .btn .chevron{ font-size:10px; color:var(--text-label); }
+.fp-date-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 
-  /* ---------- Filter bar ---------- */
-  .filter-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:24px;
-  }
+.fp-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #f0f2f5;}
+.clear-btn{display:flex;align-items:center;gap:7px;background:none;border:none;color:#e05252;font-size:13px;font-weight:700;cursor:pointer;padding:6px 0;}
+.clear-btn svg{flex-shrink:0;}
+.apply-btn{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
+.apply-btn:hover{background:#1d4ed8;}
 
-  .filter-pill{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 14px;
-    font-size:14px;
-    color:var(--text-mid);
-    min-width:220px;
-  }
+/* ── Date range text ── */
+.date-range-text{font-size:13px;font-weight:700;letter-spacing:.4px;color:#6b7280;margin-bottom:24px;}
 
-  .filter-pill svg{ flex-shrink:0; }
-  .filter-pill .chevron{ margin-left:auto; color:var(--text-label); font-size:10px; }
+/* ── Summary cards ── */
+.summary-row{display:grid;grid-template-columns:1fr 1fr 1fr 2.2fr;gap:14px;margin-bottom:30px;}
+.stat-card{border:1px solid #e8ebf0;border-radius:10px;padding:18px 14px 20px;text-align:center;background:#fff;}
+.stat-icon{width:36px;height:36px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
+.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.7px;color:#9ca3af;margin-bottom:6px;}
+.stat-val{font-size:22px;font-weight:800;min-height:28px;}
+.stat-val.neg{color:#ef4444;}
 
-  .date-range{
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:0.4px;
-    color:var(--text-mid);
-  }
+/* ── Overview card ── */
+.overview-card{border:1px solid #e8ebf0;border-radius:10px;padding:16px;background:#fff;}
+.ov-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.ov-top h3{font-size:12px;font-weight:800;letter-spacing:.5px;color:#6b7280;}
+.dd-wrap{position:relative;display:inline-block;}
+.dd-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #dde1e9;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;background:#fff;user-select:none;}
+.dd-btn .chev{transition:transform .2s;}
+.dd-wrap.open .dd-btn .chev{transform:rotate(180deg);}
+.dd-menu{display:none;position:absolute;top:calc(100% + 5px);right:0;background:#fff;border:1px solid #dde1e9;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.10);min-width:190px;z-index:200;overflow:hidden;}
+.dd-wrap.open .dd-menu{display:block;}
+.dd-item{padding:10px 16px;font-size:13px;cursor:pointer;color:#374151;transition:background .12s;}
+.dd-item:hover{background:#f5f7fa;}
+.dd-sep{height:1px;background:#f0f1f3;}
 
-  /* ---------- Summary cards row ---------- */
-  .summary-row{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr 2.1fr;
-    gap:16px;
-    margin-bottom:32px;
-  }
+.cmp-row{display:grid;grid-template-columns:60px 10px 40px 1fr 72px;align-items:center;gap:8px;margin-bottom:10px;}
+.cmp-row:last-child{margin-bottom:0;}
+.dot{width:9px;height:9px;border-radius:50%;}
+.dot.cur{background:#e8823f;}.dot.pri{background:#c8cdd5;}
+.yr-lbl{font-size:12px;font-weight:700;color:#374151;}
+.bar-track{height:11px;background:#eef0f2;border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.bar-fill.cur{background:#7cb342;}.bar-fill.pri{background:#d1d5db;}
+.bar-val{font-size:12px;color:#9ca3af;text-align:right;}
 
-  .stat-card{
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:18px 16px 20px;
-    text-align:center;
-  }
+/* ── Sections ── */
+.section{background:#fff;border:1px solid #e8ebf0;border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.sec-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f0f2f5;}
+.sec-title{font-size:12px;font-weight:800;letter-spacing:.6px;color:#374151;}
+.add-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid #d1d5db;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;color:#6b7280;cursor:pointer;transition:border-color .15s,color .15s;}
+.add-btn:hover{border-color:#2563eb;color:#2563eb;}
 
-  .stat-card .icon{
-    width:34px; height:34px;
-    margin:0 auto 8px;
-    display:flex; align-items:center; justify-content:center;
-  }
+.line-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid #f7f8fa;}
+.line-row:last-child{border-bottom:none;}
+.line-name{border:none;background:transparent;outline:none;font-size:14px;color:#374151;width:100%;font-family:inherit;}
+.line-name::placeholder{color:#c0c4cc;}
+.line-amount{border:1px solid transparent;border-radius:6px;padding:5px 8px;font-size:14px;font-weight:500;color:#1f2430;text-align:right;width:130px;font-family:inherit;outline:none;transition:border-color .15s;background:transparent;}
+.line-amount:focus{border-color:#2563eb;background:#f8faff;}
+.line-amount.neg{color:#ef4444;}
+.del-btn{background:none;border:none;cursor:pointer;color:#d1d5db;padding:4px;border-radius:4px;display:flex;align-items:center;transition:color .15s;}
+.del-btn:hover{color:#ef4444;}
 
-  .stat-label{
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:0.6px;
-    color:var(--text-label);
-    margin-bottom:6px;
-  }
+.total-row{display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid #f0f2f5;background:#fafbfc;}
+.total-amt{font-size:14px;font-weight:700;min-width:130px;text-align:right;}
+.total-amt.neg{color:#ef4444;}
 
-  .stat-value{
-    font-size:21px;
-    font-weight:700;
-    min-height:26px;
-    border-bottom:1px dashed transparent;
-  }
+/* ── Net row ── */
+.net-card{background:#fff;border:1px solid #e8ebf0;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.net-lbl{font-size:15px;font-weight:800;letter-spacing:.2px;}
+.net-amt{font-size:20px;font-weight:800;}
+.net-amt.neg{color:#ef4444;}
 
-  .stat-value:empty{ border-bottom:1px dashed #d8dbe0; }
+/* ── Export btn ── */
+.export-wrap{position:absolute;top:0;right:0;}
 
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2430;color:#fff;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-  /* ---------- Overview card ---------- */
-  .overview-card{
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:16px 18px;
-  }
+/* ── Overlay ── */
+#ov{display:none;position:fixed;inset:0;z-index:200;}
 
-  .overview-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:18px;
-  }
-
-  .overview-top h3{
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:0.5px;
-    margin:0;
-  }
-
-  .overview-top .btn{ padding:6px 12px; font-size:13px; }
-
-  .compare-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:14px;
-  }
-
-  .compare-row:last-child{ margin-bottom:0; }
-
-  .dot{
-    width:9px; height:9px;
-    border-radius:50%;
-    flex-shrink:0;
-  }
-  .dot.is-current{ background:var(--orange); }
-  .dot.is-prior{ background:var(--gray-dot); }
-
-  .compare-label{
-    font-size:13px;
-    font-weight:600;
-    width:42px;
-    flex-shrink:0;
-  }
-
-  .bar-track{
-    flex:1;
-    height:12px;
-    background:#eef0f2;
-    border-radius:6px;
-    position:relative;
-    overflow:hidden;
-  }
-
-  .bar-fill{
-    height:100%;
-    border-radius:6px;
-  }
-  .bar-fill.is-current{ background:var(--green); width:0%; }
-  .bar-fill.is-prior{ background:#dfe2e6; width:0%; }
-
-  .bar-value{
-    font-size:12px;
-    color:var(--text-label);
-    width:70px;
-    text-align:right;
-    flex-shrink:0;
-  }
-
-  /* ---------- Sections (Income / Expenses) ---------- */
-  .section-title{
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:0.5px;
-    margin-bottom:4px;
-  }
-
-  .section{
-    margin-bottom:28px;
-  }
-
-  .line-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:11px 4px;
-    border-bottom:1px solid var(--border);
-    font-size:14px;
-  }
-
-  .line-row .label{ color:var(--text-mid); }
-
-  .line-row .amount{
-    font-weight:500;
-    min-width:90px;
-    text-align:right;
-    border-bottom:1px dashed transparent;
-  }
-  .line-row .amount:empty{ border-bottom:1px dashed #d8dbe0; }
-
-  .total-row{
-    display:flex;
-    justify-content:space-between;
-    padding:14px 4px 0;
-    font-size:14px;
-    font-weight:700;
-  }
-
-  .total-row .amount{
-    min-width:90px;
-    text-align:right;
-    border-bottom:1px dashed transparent;
-  }
-  .total-row .amount:empty{ border-bottom:1px dashed #d8dbe0; }
-
-  /* ---------- Net Profit/Loss ---------- */
-  .net-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding-top:18px;
-    border-top:1px solid var(--border);
-    font-size:16px;
-    font-weight:700;
-  }
-
-  .net-row .amount{
-    min-width:110px;
-    text-align:right;
-    border-bottom:1px dashed transparent;
-  }
-  .net-row .amount:empty{ border-bottom:1px dashed #d8dbe0; }
-
-  /* ---------- Responsive ---------- */
-  @media (max-width: 800px){
-    .summary-row{ grid-template-columns: 1fr 1fr; }
-    .overview-card{ grid-column: 1 / -1; }
-  }
-  @media (max-width: 520px){
-    .summary-row{ grid-template-columns: 1fr; }
-    .panel{ padding:20px; }
-  }
+@media(max-width:820px){
+  .summary-row{grid-template-columns:1fr 1fr;}
+  .filter-panel{width:calc(100vw - 40px);}
+}
+@media(max-width:520px){
+  .summary-row{grid-template-columns:1fr;}
+  .tabnav{gap:0;overflow-x:auto;}
+  .tab{padding:14px 14px;font-size:12px;}
+  .page{padding:20px 16px 40px;}
+}
 </style>
 </head>
 <body>
 
-<div class="panel">
+<div id="ov"></div>
 
-  <!-- ===================== HEADER ===================== -->
-  <div class="header-row">
-    <h1>P/L REPORT</h1>
-    <button class="btn">Export <span class="chevron">▾</span></button>
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="topbar">
+  <div class="hamburger">
+    <span></span><span></span><span></span>
   </div>
+  <div class="topbar-title">REPORTS</div>
 
-  <!-- ===================== FILTER BAR ===================== -->
-  <div class="filter-row">
-    <div class="filter-pill">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a9099" stroke-width="2"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>
-      Filter
-      <span class="chevron">▾</span>
-    </div>
-    <div class="date-range">JANUARY 1, 2026 &ndash; DECEMBER 31, 2026</div>
-  </div>
-
-  <!-- ===================== SUMMARY CARDS ===================== -->
-  <div class="summary-row">
-
-    <!-- Income card -->
-    <div class="stat-card">
-      <div class="icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7cb342" stroke-width="1.8">
-          <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.4" fill="#7cb342" stroke="none"/>
-        </svg>
+  <!-- Export (top-right) -->
+  <div style="margin-left:auto;">
+    <div class="dd-wrap" id="ddExport">
+      <div class="dd-btn" onclick="toggleDD('ddExport')">
+        Export
+        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       </div>
-      <div class="stat-label">INCOME</div>
-      <div class="stat-value">12500</div>
-    </div>
-
-    <!-- Expenses card -->
-    <div class="stat-card">
-      <div class="icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e8823f" stroke-width="1.8">
-          <path d="M3 8h14a3 3 0 0 1 3 3v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/><circle cx="16" cy="14" r="1.4" fill="#e8823f" stroke="none"/>
-        </svg>
+      <div class="dd-menu">
+        <div class="dd-item" onclick="doExport('csv')">
+          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+          Export as CSV
+        </div>
+        <div class="dd-item" onclick="doExport('print')">
+          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><rect x="6" y="17" width="12" height="5"/><path d="M6 12H4a2 2 0 0 0-2 2v3h4m14-5h2a2 2 0 0 1 2 2v3h-4"/></svg>
+          Print Report
+        </div>
+        <div class="dd-sep"></div>
+        <div class="dd-item" onclick="doExport('copy')">
+          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy to Clipboard
+        </div>
       </div>
-      <div class="stat-label">EXPENSES</div>
-      <div class="stat-value">100
-        
-      </div>
-    </div>
-
-    <!-- Net Profit/Loss card -->
-    <div class="stat-card">
-      <div class="icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4f86c6" stroke-width="1.8">
-          <ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/>
-        </svg>
-      </div>
-      <div class="stat-label">NET PROFIT/LOSS</div>
-      <div class="stat-value"></div>
-    </div>
-
-    <!-- Overview card -->
-    <div class="overview-card">
-      <div class="overview-top">
-        <h3>OVERVIEW</h3>
-        <button class="btn">Same Period Last Year <span class="chevron">▾</span></button>
-      </div>
-
-      <div class="compare-row">
-        <span class="bar-value"></span>
-        <span class="dot is-current"></span>
-        <span class="compare-label">2026</span>
-        <div class="bar-track"><div class="bar-fill is-current"></div></div>
-        <span class="bar-value"></span>
-      </div>
-
-      <div class="compare-row">
-        <span class="bar-value"></span>
-        <span class="dot is-prior"></span>
-        <span class="compare-label">2025</span>
-        <div class="bar-track"><div class="bar-fill is-prior"></div></div>
-        <span class="bar-value"></span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ===================== INCOME SECTION ===================== -->
-  <div class="section">
-    <div class="section-title">INCOME</div>
-
-    <!-- ── INCOME LINE ITEMS ──
-         To add a new income source, copy ONE .line-row block
-         and change the text inside .label. Leave .amount empty
-         or type a value into it directly in the browser/editor. -->
-    <div class="line-row">
-      <span class="label">Rent</span>
-      <span class="amount"></span>
-    </div>
-    <div class="line-row">
-      <span class="label">Late Fee Charge</span>
-      <span class="amount"></span>
-    </div>
-    <div class="line-row">
-      <span class="label">Water</span>
-      <span class="amount"></span>
-    </div>
-    <!-- ── END INCOME LINE ITEMS ── -->
-
-    <div class="total-row">
-      <span></span>
-      <span class="amount"></span>
     </div>
   </div>
-
-  <!-- ===================== EXPENSES SECTION ===================== -->
-  <div class="section">
-    <div class="section-title">EXPENSES</div>
-
-    <!-- ── EXPENSE LINE ITEMS ──
-         Same pattern as Income: copy one .line-row block per expense. -->
-    <div class="line-row">
-      <span class="label">Advertising</span>
-      <span class="amount"></span>
-    </div>
-    <div class="line-row">
-      <span class="label">Appliance</span>
-      <span class="amount"></span>
-    </div>
-    <!-- ── END EXPENSE LINE ITEMS ── -->
-
-    <div class="total-row">
-      <span></span>
-      <span class="amount"></span>
-    </div>
-  </div>
-
-  <!-- ===================== NET PROFIT/LOSS ===================== -->
-  <div class="net-row">
-    <span>NET PROFIT/LOSS</span>
-    <span class="amount"></span>
-  </div>
-
 </div>
 
+<!-- ══════════ TAB NAV ══════════ -->
+<div class="tabnav">
+  <div class="tab" onclick="switchTab(this)">BANK DEPOSIT</div>
+  <div class="tab" onclick="switchTab(this)">RENT ROLL</div>
+  <div class="tab" onclick="switchTab(this)">DEPOSITS HELD</div>
+  <div class="tab active" onclick="switchTab(this)">P/L REPORT</div>
+  <div class="tab" onclick="switchTab(this)">TRANSACTIONS</div>
+</div>
+
+<!-- ══════════ PAGE ══════════ -->
+<div class="page">
+  <div class="page-title">P/L REPORT</div>
+
+  <!-- ── Filter pill + panel ── -->
+  <div class="filter-wrap" id="filterWrap">
+    <div class="filter-pill" onclick="toggleFilter()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+      <span class="filter-pill-label">Filter</span>
+      <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+
+    <div class="filter-panel" id="filterPanel">
+      <div class="fp-grid">
+        <!-- Property -->
+        <div>
+          <div class="fp-label">Property</div>
+          <select class="fp-select" id="fpProperty">
+            <option value="">Select</option>
+            <option>Sunrise Apartments</option>
+            <option>Maple Street Complex</option>
+            <option>Green Valley Homes</option>
+            <option>Oakwood Residences</option>
+          </select>
+        </div>
+        <!-- Unit -->
+        <div>
+          <div class="fp-label">Unit</div>
+          <select class="fp-select" id="fpUnit">
+            <option value="">Select</option>
+            <option>Unit 101</option>
+            <option>Unit 102</option>
+            <option>Unit 201</option>
+            <option>Unit 202</option>
+            <option>Unit 301</option>
+          </select>
+        </div>
+        <!-- Taxable Entity -->
+        <div class="fp-full">
+          <div class="fp-label">Taxable Entity</div>
+          <select class="fp-select fp-select gray-bg" id="fpTaxable">
+            <option>All</option>
+            <option>Entity A</option>
+            <option>Entity B</option>
+            <option>Entity C</option>
+          </select>
+        </div>
+        <!-- Bank Account -->
+        <div class="fp-full">
+          <div class="fp-label">Bank Account</div>
+          <select class="fp-select fp-select gray-bg" id="fpBank">
+            <option>All</option>
+            <option>Chase Checking ••4521</option>
+            <option>Wells Fargo Savings ••8832</option>
+            <option>Bank of America ••1190</option>
+          </select>
+        </div>
+        <!-- Date Range + Select Year -->
+        <div class="fp-full">
+          <div class="fp-date-row">
+            <div>
+              <div class="fp-label">Date Range</div>
+              <select class="fp-select" id="fpDateRange" onchange="updateDateLabel()">
+                <option value="year">Year</option>
+                <option value="quarter">Quarter</option>
+                <option value="month">Month</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div>
+              <div class="fp-label"><span>Select Year</span></div>
+              <select class="fp-select" id="fpYear" onchange="updateDateLabel()">
+                <option>2026</option>
+                <option>2025</option>
+                <option>2024</option>
+                <option>2023</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fp-footer">
+        <button class="clear-btn" onclick="clearFilters()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          Clear Filters
+        </button>
+        <button class="apply-btn" onclick="applyFilters()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date range label -->
+  <div class="date-range-text" id="dateRangeText">JANUARY 1, 2026 – DECEMBER 31, 2026</div>
+
+  <!-- ── Summary + Overview ── -->
+  <div class="summary-row">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7cb342" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="#7cb342" stroke="none"/></svg>
+      </div>
+      <div class="stat-lbl">INCOME</div>
+      <div class="stat-val" id="sumIncome">$0.00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e8823f" stroke-width="1.8"><path d="M3 8h14a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/><circle cx="16" cy="14" r="1.5" fill="#e8823f" stroke="none"/></svg>
+      </div>
+      <div class="stat-lbl">EXPENSES</div>
+      <div class="stat-val neg" id="sumExpenses">($0.00)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4f86c6" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/></svg>
+      </div>
+      <div class="stat-lbl">NET PROFIT/LOSS</div>
+      <div class="stat-val" id="sumNet">$0.00</div>
+    </div>
+
+    <!-- Overview -->
+    <div class="overview-card">
+      <div class="ov-top">
+        <h3>OVERVIEW</h3>
+        <div class="dd-wrap" id="ddPeriod">
+          <div class="dd-btn" onclick="toggleDD('ddPeriod')">
+            <span id="periodLbl">Same Period Last Year</span>
+            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="dd-menu">
+            <div class="dd-item" onclick="setPeriod('Same Period Last Year','2025')">Same Period Last Year</div>
+            <div class="dd-item" onclick="setPeriod('Previous Quarter','Q3 2025')">Previous Quarter</div>
+            <div class="dd-item" onclick="setPeriod('Previous Month','Dec 2025')">Previous Month</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" onclick="setPeriod('No Comparison','—')">No Comparison</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="cmp-row">
+          <span class="bar-val" id="bStartCur" style="text-align:right;">$0.00</span>
+          <span class="dot cur"></span>
+          <span class="yr-lbl">2026</span>
+          <div class="bar-track"><div class="bar-fill cur" id="bCur" style="width:0%"></div></div>
+          <span class="bar-val" id="bEndCur">$0.00</span>
+        </div>
+        <div class="cmp-row">
+          <span class="bar-val" id="bStartPri" style="text-align:right;">$0.00</span>
+          <span class="dot pri"></span>
+          <span class="yr-lbl" id="priorLbl">2025</span>
+          <div class="bar-track"><div class="bar-fill pri" id="bPri" style="width:0%"></div></div>
+          <span class="bar-val" id="bEndPri">$0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INCOME SECTION ══ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-title">INCOME</span>
+      <button class="add-btn" onclick="addRow('income')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add Income
+      </button>
+    </div>
+    <div id="incomeRows"></div>
+    <div class="total-row">
+      <span class="total-amt" id="incomeTotal">$0.00</span>
+    </div>
+  </div>
+
+  <!-- ══ EXPENSES SECTION ══ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-title">EXPENSES</span>
+      <button class="add-btn" onclick="addRow('expense')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add Expense
+      </button>
+    </div>
+    <div id="expenseRows"></div>
+    <div class="total-row">
+      <span class="total-amt neg" id="expenseTotal">($0.00)</span>
+    </div>
+  </div>
+
+  <!-- ══ NET PROFIT/LOSS ══ -->
+  <div class="net-card">
+    <span class="net-lbl">NET PROFIT / LOSS</span>
+    <span class="net-amt" id="netAmt">$0.00</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Data ─────────────────────────────────────────────────
+let incomeRows  = [
+  {id:1,name:'Rent',amount:69500},
+  {id:2,name:'Late Fee Charge',amount:23600},
+  {id:3,name:'Water',amount:454}
+];
+let expenseRows = [
+  {id:4,name:'Advertising',amount:100},
+  {id:5,name:'Appliance',amount:200}
+];
+let nextId = 6;
+let priorNet = 0;
+
+// ─── Overlay / dropdown logic ─────────────────────────────
+const ovEl = document.getElementById('ov');
+
+function toggleDD(id){
+  const el = document.getElementById(id);
+  const wasOpen = el.classList.contains('open');
+  closeAll();
+  if(!wasOpen){ el.classList.add('open'); ovEl.style.display='block'; }
+}
+
+function closeAll(){
+  document.querySelectorAll('.dd-wrap').forEach(d=>d.classList.remove('open'));
+  ovEl.style.display='none';
+}
+
+ovEl.addEventListener('click', ()=>{ closeAll(); closeFilter(); });
+
+// ─── Tab switching ────────────────────────────────────────
+function switchTab(el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(el.textContent.trim()!=='P/L REPORT') showToast('Switched to: '+el.textContent.trim());
+}
+
+// ─── Filter panel ─────────────────────────────────────────
+function toggleFilter(){
+  const w = document.getElementById('filterWrap');
+  if(w.classList.contains('open')){ closeFilter(); }
+  else { w.classList.add('open'); }
+}
+
+function closeFilter(){
+  document.getElementById('filterWrap').classList.remove('open');
+}
+
+function clearFilters(){
+  document.getElementById('fpProperty').value = '';
+  document.getElementById('fpUnit').value = '';
+  document.getElementById('fpTaxable').value = 'All';
+  document.getElementById('fpBank').value = 'All';
+  document.getElementById('fpDateRange').value = 'year';
+  document.getElementById('fpYear').value = '2026';
+  updateDateLabel();
+  showToast('Filters cleared');
+}
+
+function applyFilters(){
+  const prop  = document.getElementById('fpProperty').value || 'All';
+  const year  = document.getElementById('fpYear').value;
+  const range = document.getElementById('fpDateRange').value;
+  closeFilter();
+  updateDateLabel();
+  showToast('Filters applied — '+range+' '+year+(prop!=='All'?' · '+prop:''));
+}
+
+function updateDateLabel(){
+  const yr  = document.getElementById('fpYear').value;
+  const rng = document.getElementById('fpDateRange').value;
+  const months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  let label = '';
+  if(rng==='year')    label = `JANUARY 1, ${yr} – DECEMBER 31, ${yr}`;
+  else if(rng==='quarter') label = `OCTOBER 1, ${yr} – DECEMBER 31, ${yr}`;
+  else if(rng==='month') label = `DECEMBER 1, ${yr} – DECEMBER 31, ${yr}`;
+  else label = `JANUARY 1, ${yr} – DECEMBER 31, ${yr}`;
+  document.getElementById('dateRangeText').textContent = label;
+}
+
+// ─── Render rows ──────────────────────────────────────────
+function renderRows(type){
+  const rows = type==='income' ? incomeRows : expenseRows;
+  const cont = document.getElementById(type==='income'?'incomeRows':'expenseRows');
+  cont.innerHTML='';
+  rows.forEach(r=>{
+    const d = document.createElement('div');
+    d.className='line-row';
+    d.innerHTML=`
+      <input class="line-name" type="text" placeholder="Enter description…" value="${esc(r.name)}"
+             oninput="updateName('${type}',${r.id},this.value)">
+      <input class="line-amount ${type==='expense'?'neg':''}" type="text"
+             value="${r.amount>0?fmt(r.amount,type):''}" placeholder="$0.00"
+             oninput="updateAmt('${type}',${r.id},this.value)"
+             onblur="fmtField(this,'${type}',${r.id})">
+      <button class="del-btn" onclick="delRow('${type}',${r.id})" title="Delete">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+      </button>`;
+    cont.appendChild(d);
+  });
+  recalc();
+}
+
+function fmt(n,type){
+  const s='$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return type==='expense'?'('+s+')':s;
+}
+function fmtN(n){
+  const s='$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return n<0?'('+s+')':s;
+}
+function parseN(s){ return parseFloat(s.replace(/[$,()]/g,''))||0; }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function fmtField(inp,type,id){
+  const arr = type==='income'?incomeRows:expenseRows;
+  const r = arr.find(x=>x.id===id);
+  if(r && r.amount>0) inp.value=fmt(r.amount,type);
+}
+
+// ─── CRUD ─────────────────────────────────────────────────
+function addRow(type){
+  const arr = type==='income'?incomeRows:expenseRows;
+  arr.push({id:nextId++,name:'',amount:0});
+  renderRows(type);
+  const cont = document.getElementById(type==='income'?'incomeRows':'expenseRows');
+  cont.lastElementChild.querySelector('.line-name').focus();
+}
+function delRow(type,id){
+  if(type==='income') incomeRows=incomeRows.filter(r=>r.id!==id);
+  else expenseRows=expenseRows.filter(r=>r.id!==id);
+  renderRows(type);
+}
+function updateName(type,id,v){
+  const arr=type==='income'?incomeRows:expenseRows;
+  const r=arr.find(x=>x.id===id);if(r)r.name=v;
+}
+function updateAmt(type,id,v){
+  const arr=type==='income'?incomeRows:expenseRows;
+  const r=arr.find(x=>x.id===id);if(r){r.amount=parseN(v);recalc();}
+}
+
+// ─── Recalc ───────────────────────────────────────────────
+function recalc(){
+  const inc = incomeRows.reduce((s,r)=>s+r.amount,0);
+  const exp = expenseRows.reduce((s,r)=>s+r.amount,0);
+  const net = inc-exp;
+
+  document.getElementById('sumIncome').textContent  = fmtN(inc);
+  document.getElementById('sumIncome').className    = 'stat-val'+(inc<0?' neg':'');
+  document.getElementById('sumExpenses').textContent= exp>0?'('+fmtN(exp)+')':'$0.00';
+  document.getElementById('sumExpenses').className  = 'stat-val'+(exp>0?' neg':'');
+  const nEl=document.getElementById('sumNet');
+  nEl.textContent=fmtN(net); nEl.className='stat-val'+(net<0?' neg':'');
+
+  document.getElementById('incomeTotal').textContent  = fmtN(inc);
+  const etEl=document.getElementById('expenseTotal');
+  etEl.textContent=exp>0?'('+fmtN(exp)+')':'($0.00)';
+
+  const naEl=document.getElementById('netAmt');
+  naEl.textContent=fmtN(net); naEl.className='net-amt'+(net<0?' neg':'');
+
+  // bars
+  const max=Math.max(Math.abs(net),Math.abs(priorNet),1);
+  document.getElementById('bCur').style.width=(Math.abs(net)/max*100)+'%';
+  document.getElementById('bPri').style.width=(Math.abs(priorNet)/max*100)+'%';
+  document.getElementById('bStartCur').textContent=fmtN(net);
+  document.getElementById('bEndCur').textContent=fmtN(net);
+  document.getElementById('bStartPri').textContent=fmtN(priorNet);
+  document.getElementById('bEndPri').textContent=fmtN(priorNet);
+}
+
+// ─── Period ───────────────────────────────────────────────
+function setPeriod(lbl,yr){
+  document.getElementById('periodLbl').textContent=lbl;
+  document.getElementById('priorLbl').textContent=yr;
+  closeAll();
+  showToast('Comparison: '+lbl);
+  recalc();
+}
+
+// ─── Export ───────────────────────────────────────────────
+function doExport(t){
+  closeAll();
+  if(t==='print'){window.print();return;}
+  if(t==='csv'){
+    const lines=['Category,Name,Amount'];
+    incomeRows.forEach(r=>lines.push('Income,"'+r.name+'",'+r.amount.toFixed(2)));
+    expenseRows.forEach(r=>lines.push('Expense,"'+r.name+'",'+(r.amount*-1).toFixed(2)));
+    const inc=incomeRows.reduce((s,r)=>s+r.amount,0);
+    const exp=expenseRows.reduce((s,r)=>s+r.amount,0);
+    lines.push('','Total Income,,'+inc.toFixed(2),'Total Expenses,,'+(exp*-1).toFixed(2),'Net Profit/Loss,,'+(inc-exp).toFixed(2));
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
+    a.download='pl_report.csv'; a.click();
+    showToast('CSV downloaded');return;
+  }
+  if(t==='copy'){
+    const inc=incomeRows.reduce((s,r)=>s+r.amount,0);
+    const exp=expenseRows.reduce((s,r)=>s+r.amount,0);
+    const lines=['P/L REPORT',''];
+    lines.push('INCOME');
+    incomeRows.forEach(r=>lines.push('  '+r.name+': '+fmtN(r.amount)));
+    lines.push('  Total: '+fmtN(inc),'');
+    lines.push('EXPENSES');
+    expenseRows.forEach(r=>lines.push('  '+r.name+': ('+fmtN(r.amount)+')'));
+    lines.push('  Total: ('+fmtN(exp)+')','');
+    lines.push('NET PROFIT/LOSS: '+fmtN(inc-exp));
+    navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Copied to clipboard'));
+  }
+}
+
+// ─── Toast ────────────────────────────────────────────────
+let tTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(tTimer); tTimer=setTimeout(()=>t.classList.remove('show'),2300);
+}
+
+// ─── Init ─────────────────────────────────────────────────
+renderRows('income');
+renderRows('expense');
+</script>
 </body>
 </html>
