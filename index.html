@@ -3,604 +3,894 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reports – P/L Report</title>
+<title>Reports</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f2f5;color:#1f2430;font-size:14px;min-height:100vh;}
 
 /* ── Top bar ── */
-.topbar{display:flex;align-items:center;gap:18px;background:#fff;padding:0 28px;height:58px;border-bottom:1px solid #e2e5ea;position:sticky;top:0;z-index:300;}
+.topbar{display:flex;align-items:center;gap:16px;background:#fff;padding:0 28px;height:54px;border-bottom:3px solid #1a2e44;position:sticky;top:0;z-index:400;}
 .hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
 .hamburger span{display:block;width:20px;height:2px;background:#555;border-radius:2px;}
-.topbar-title{font-size:17px;font-weight:800;letter-spacing:.3px;color:#1f2430;}
+.topbar-title{font-size:17px;font-weight:800;letter-spacing:.3px;color:#1a2e44;}
 
 /* ── Tab nav ── */
-.tabnav{background:#fff;border-bottom:1px solid #e2e5ea;display:flex;justify-content:center;gap:0;padding:0 28px;}
-.tab{padding:16px 22px;font-size:13px;font-weight:700;letter-spacing:.4px;color:#8a94a6;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;}
-.tab:hover{color:#2563eb;}
-.tab.active{color:#2563eb;border-bottom-color:#2563eb;}
+.tabnav{background:#f0f2f5;display:flex;justify-content:center;gap:0;padding:14px 28px 0;}
+.tab{padding:12px 24px;font-size:13px;font-weight:700;letter-spacing:.4px;color:#5a8fb5;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;}
+.tab:hover{color:#1a6fa8;}
+.tab.active{color:#1a6fa8;border-bottom-color:#1a6fa8;}
 
-/* ── Page body ── */
-.page{max-width:1140px;margin:0 auto;padding:32px 24px 60px;}
-.page-title{font-size:22px;font-weight:800;margin-bottom:24px;color:#1f2430;}
+/* ── Page content ── */
+.page{max-width:1400px;margin:0 auto;padding:24px 24px 60px;}
+.page-title{font-size:20px;font-weight:800;margin-bottom:20px;color:#1a2e44;}
 
-/* ── Filter pill / panel ── */
-.filter-wrap{position:relative;margin-bottom:24px;}
-.filter-pill{display:flex;align-items:center;gap:10px;border:1px solid #dde1e9;border-radius:8px;padding:10px 16px;background:#fff;cursor:pointer;width:380px;user-select:none;transition:border-color .15s;}
-.filter-pill:hover{border-color:#2563eb;}
-.filter-pill svg{flex-shrink:0;color:#8a94a6;}
-.filter-pill-label{flex:1;font-size:13px;color:#6b7280;font-weight:500;}
-.filter-pill .chev{transition:transform .2s;color:#8a94a6;}
-.filter-wrap.open .filter-pill .chev{transform:rotate(180deg);}
-.filter-wrap.open .filter-pill{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+/* ── Tab panels ── */
+.tab-panel{display:none;}.tab-panel.active{display:block;}
 
-.filter-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;width:680px;background:#fff;border:1px solid #dde1e9;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.10);padding:24px;z-index:250;}
-.filter-wrap.open .filter-panel{display:block;}
+/* ── Toolbar row (filter + export) ── */
+.toolbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;position:relative;z-index:300;}
+.toolbar-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 
-.fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-bottom:20px;}
+/* ── Filter pill ── */
+.filter-pill{display:flex;align-items:center;gap:8px;border:1px solid #dde1e9;border-radius:6px;padding:8px 14px;background:#fff;cursor:pointer;min-width:280px;user-select:none;transition:border-color .15s;}
+.filter-pill:hover{border-color:#1a6fa8;}
+.filter-pill svg{flex-shrink:0;color:#7a8fa6;}
+.filter-pill-label{flex:1;font-size:13px;color:#555;font-weight:500;}
+.filter-pill .chev{margin-left:auto;transition:transform .2s;color:#7a8fa6;}
+.filter-open .filter-pill{border-color:#1a6fa8;box-shadow:0 0 0 3px rgba(26,111,168,.08);}
+.filter-open .filter-pill .chev{transform:rotate(180deg);}
+
+/* ── Filter panel ── */
+.filter-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;width:560px;background:#fff;border:1px solid #dde1e9;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:22px 24px 18px;z-index:350;}
+.filter-open .filter-panel{display:block;}
+.fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-bottom:18px;}
 .fp-full{grid-column:1/-1;}
-.fp-label{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;}
-.fp-label span{color:#2563eb;}/* for "Select Year" blue label */
-.fp-select{width:100%;padding:9px 36px 9px 12px;border:1px solid #dde1e9;border-radius:8px;background:#fff;font-size:13px;color:#374151;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;font-family:inherit;transition:border-color .15s;}
-.fp-select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08);}
-.fp-select.gray-bg{background-color:#f7f8fa;}
-
-.fp-date-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-
-.fp-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #f0f2f5;}
-.clear-btn{display:flex;align-items:center;gap:7px;background:none;border:none;color:#e05252;font-size:13px;font-weight:700;cursor:pointer;padding:6px 0;}
+.fp-lbl{font-size:12px;font-weight:700;color:#374151;margin-bottom:6px;}
+.fp-input,.fp-select{width:100%;padding:8px 32px 8px 10px;border:1px solid #dde1e9;border-radius:7px;background:#fff;font-size:13px;color:#374151;font-family:inherit;transition:border-color .15s;}
+.fp-input{padding-right:10px;}
+.fp-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer;}
+.fp-input:focus,.fp-select:focus{outline:none;border-color:#1a6fa8;box-shadow:0 0 0 3px rgba(26,111,168,.08);}
+.fp-date-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.fp-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.fp-checkbox-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.fp-checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:#1a6fa8;cursor:pointer;}
+.fp-checkbox-row label{font-size:13px;color:#5a7a9a;cursor:pointer;}
+.fp-checkbox-group{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.fp-footer{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid #f0f2f5;}
+.clear-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:#e05252;font-size:13px;font-weight:700;cursor:pointer;}
 .clear-btn svg{flex-shrink:0;}
-.apply-btn{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
-.apply-btn:hover{background:#1d4ed8;}
+.apply-btn{background:#1a6fa8;color:#fff;border:none;border-radius:7px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
+.apply-btn:hover{background:#155c8e;}
 
-/* ── Date range text ── */
-.date-range-text{font-size:13px;font-weight:700;letter-spacing:.4px;color:#6b7280;margin-bottom:24px;}
+/* ── Date input ── */
+.date-input-wrap{position:relative;display:flex;align-items:center;}
+.date-input-wrap input[type=date]{width:100%;padding:8px 32px 8px 10px;border:1px solid #dde1e9;border-radius:7px;font-size:13px;font-family:inherit;color:#374151;cursor:pointer;}
+.date-input-wrap input[type=date]:focus{outline:none;border-color:#1a6fa8;}
 
-/* ── Summary cards ── */
-.summary-row{display:grid;grid-template-columns:1fr 1fr 1fr 2.2fr;gap:14px;margin-bottom:30px;}
-.stat-card{border:1px solid #e8ebf0;border-radius:10px;padding:18px 14px 20px;text-align:center;background:#fff;}
-.stat-icon{width:36px;height:36px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
-.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.7px;color:#9ca3af;margin-bottom:6px;}
-.stat-val{font-size:22px;font-weight:800;min-height:28px;}
+/* ── Export btn ── */
+.export-btn,.export-report-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #dde1e9;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;color:#1a6fa8;background:#fff;cursor:pointer;white-space:nowrap;transition:border-color .15s,background .15s;}
+.export-btn:hover,.export-report-btn:hover{border-color:#1a6fa8;background:#f0f6fc;}
+
+/* ── Sub-tabs (Rent Roll) ── */
+.subtabs{display:flex;gap:28px;margin-bottom:16px;}
+.subtab{font-size:14px;font-weight:700;color:#7a8fa6;cursor:pointer;padding-bottom:6px;border-bottom:2px solid transparent;}
+.subtab.active{color:#1a2e44;border-bottom-color:#1a2e44;}
+
+/* ── Showing count ── */
+.showing{font-size:13px;color:#555;margin-bottom:12px;}
+.showing b{color:#1a2e44;}
+.refresh-note{font-size:12px;color:#888;margin-bottom:14px;}
+.refresh-note a{color:#1a6fa8;cursor:pointer;font-weight:600;}
+
+/* ── Tables ── */
+.tbl-wrap{background:#fff;border-radius:10px;border:1px solid #e2e5ea;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:#f7f8fa;}
+th{padding:11px 14px;font-size:12px;font-weight:600;color:#7a8fa6;text-align:left;white-space:nowrap;border-bottom:1px solid #e8ebf0;}
+th.sortable{cursor:pointer;}
+th.sortable:hover{color:#1a6fa8;}
+th .sort-icon{display:inline-block;margin-left:4px;font-size:10px;color:#bbb;}
+td{padding:12px 14px;font-size:13px;color:#374151;border-bottom:1px solid #f0f2f5;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafbfc;}
+.no-records{text-align:center;padding:60px 20px;color:#888;font-size:14px;}
+td.prop-detail{font-size:13px;line-height:1.5;}
+td.prop-detail .prop-name{font-weight:600;color:#1a2e44;}
+td.prop-detail .prop-addr{color:#7a8fa6;font-size:12px;}
+
+/* ── Status badge ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge.success{background:#e8faf2;color:#1d9e6a;}
+.badge.pending{background:#fff3e0;color:#e07b1a;}
+.badge.failed{background:#fdecea;color:#d93025;}
+
+/* ── Bank Deposit colored cards ── */
+.bd-side{display:flex;flex-direction:column;gap:12px;min-width:230px;}
+.bd-card{border-radius:10px;padding:18px 20px;color:#fff;}
+.bd-card.orange{background:linear-gradient(135deg,#f5a94e,#e8823f);}
+.bd-card.teal{background:linear-gradient(135deg,#3dbf9a,#28a083);}
+.bd-card .bd-amt{font-size:26px;font-weight:800;margin-bottom:4px;}
+.bd-card .bd-lbl{font-size:12px;font-weight:700;letter-spacing:.5px;opacity:.9;}
+.bd-layout{display:flex;gap:16px;align-items:flex-start;}
+.bd-table-wrap{flex:1;min-width:0;}
+
+/* ── Deposits Held buttons ── */
+.action-btn{border:1px solid #1a6fa8;color:#1a6fa8;background:#fff;border-radius:5px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;transition:background .15s;}
+.action-btn:hover{background:#f0f6fc;}
+.expand-arrow{color:#888;cursor:pointer;margin-right:6px;}
+
+/* ── PL overview ── */
+.summary-row{display:grid;grid-template-columns:1fr 1fr 1fr 2.2fr;gap:14px;margin-bottom:24px;}
+.stat-card{border:1px solid #e8ebf0;border-radius:10px;padding:16px 14px 18px;text-align:center;background:#fff;}
+.stat-icon{width:34px;height:34px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
+.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.7px;color:#9ca3af;margin-bottom:5px;}
+.stat-val{font-size:21px;font-weight:800;}
 .stat-val.neg{color:#ef4444;}
-
-/* ── Overview card ── */
-.overview-card{border:1px solid #e8ebf0;border-radius:10px;padding:16px;background:#fff;}
-.ov-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.ov-top h3{font-size:12px;font-weight:800;letter-spacing:.5px;color:#6b7280;}
-.dd-wrap{position:relative;display:inline-block;}
-.dd-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #dde1e9;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;background:#fff;user-select:none;}
-.dd-btn .chev{transition:transform .2s;}
-.dd-wrap.open .dd-btn .chev{transform:rotate(180deg);}
-.dd-menu{display:none;position:absolute;top:calc(100% + 5px);right:0;background:#fff;border:1px solid #dde1e9;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.10);min-width:190px;z-index:200;overflow:hidden;}
-.dd-wrap.open .dd-menu{display:block;}
-.dd-item{padding:10px 16px;font-size:13px;cursor:pointer;color:#374151;transition:background .12s;}
-.dd-item:hover{background:#f5f7fa;}
-.dd-sep{height:1px;background:#f0f1f3;}
-
-.cmp-row{display:grid;grid-template-columns:60px 10px 40px 1fr 72px;align-items:center;gap:8px;margin-bottom:10px;}
+.overview-card{border:1px solid #e8ebf0;border-radius:10px;padding:14px 16px;background:#fff;}
+.ov-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ov-top h3{font-size:11px;font-weight:800;letter-spacing:.5px;color:#6b7280;}
+.mini-dd-wrap{position:relative;}
+.mini-dd-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #dde1e9;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;background:#fff;user-select:none;}
+.mini-dd-btn .chev{transition:transform .2s;}
+.mini-dd-wrap.open .mini-dd-btn .chev{transform:rotate(180deg);}
+.mini-dd-menu{display:none;position:absolute;top:calc(100%+4px);right:0;background:#fff;border:1px solid #dde1e9;border-radius:9px;box-shadow:0 6px 20px rgba(0,0,0,.10);min-width:190px;z-index:100;overflow:hidden;}
+.mini-dd-wrap.open .mini-dd-menu{display:block;}
+.mini-dd-item{padding:9px 14px;font-size:13px;cursor:pointer;color:#374151;}
+.mini-dd-item:hover{background:#f5f7fa;}
+.mini-dd-sep{height:1px;background:#f0f1f3;}
+.cmp-row{display:grid;grid-template-columns:64px 10px 42px 1fr 70px;align-items:center;gap:8px;margin-bottom:10px;}
 .cmp-row:last-child{margin-bottom:0;}
 .dot{width:9px;height:9px;border-radius:50%;}
 .dot.cur{background:#e8823f;}.dot.pri{background:#c8cdd5;}
-.yr-lbl{font-size:12px;font-weight:700;color:#374151;}
+.yr-lbl{font-size:12px;font-weight:700;}
 .bar-track{height:11px;background:#eef0f2;border-radius:6px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s;}
 .bar-fill.cur{background:#7cb342;}.bar-fill.pri{background:#d1d5db;}
 .bar-val{font-size:12px;color:#9ca3af;text-align:right;}
 
-/* ── Sections ── */
-.section{background:#fff;border:1px solid #e8ebf0;border-radius:10px;margin-bottom:16px;overflow:hidden;}
-.sec-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f0f2f5;}
-.sec-title{font-size:12px;font-weight:800;letter-spacing:.6px;color:#374151;}
-.add-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid #d1d5db;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;color:#6b7280;cursor:pointer;transition:border-color .15s,color .15s;}
-.add-btn:hover{border-color:#2563eb;color:#2563eb;}
-
-.line-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid #f7f8fa;}
+/* ── PL sections ── */
+.pl-section{background:#fff;border:1px solid #e8ebf0;border-radius:10px;margin-bottom:14px;overflow:hidden;}
+.sec-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #f0f2f5;}
+.sec-title{font-size:12px;font-weight:800;letter-spacing:.5px;color:#374151;}
+.add-row-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid #d1d5db;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:#6b7280;cursor:pointer;transition:border-color .15s,color .15s;}
+.add-row-btn:hover{border-color:#1a6fa8;color:#1a6fa8;}
+.line-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:9px 18px;border-bottom:1px solid #f7f8fa;}
 .line-row:last-child{border-bottom:none;}
-.line-name{border:none;background:transparent;outline:none;font-size:14px;color:#374151;width:100%;font-family:inherit;}
+.line-name{border:none;background:transparent;outline:none;font-size:13px;color:#374151;width:100%;font-family:inherit;}
 .line-name::placeholder{color:#c0c4cc;}
-.line-amount{border:1px solid transparent;border-radius:6px;padding:5px 8px;font-size:14px;font-weight:500;color:#1f2430;text-align:right;width:130px;font-family:inherit;outline:none;transition:border-color .15s;background:transparent;}
-.line-amount:focus{border-color:#2563eb;background:#f8faff;}
+.line-amount{border:1px solid transparent;border-radius:6px;padding:4px 8px;font-size:13px;font-weight:500;color:#1f2430;text-align:right;width:130px;font-family:inherit;outline:none;transition:border-color .15s;background:transparent;}
+.line-amount:focus{border-color:#1a6fa8;background:#f8faff;}
 .line-amount.neg{color:#ef4444;}
-.del-btn{background:none;border:none;cursor:pointer;color:#d1d5db;padding:4px;border-radius:4px;display:flex;align-items:center;transition:color .15s;}
-.del-btn:hover{color:#ef4444;}
-
-.total-row{display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid #f0f2f5;background:#fafbfc;}
+.del-row-btn{background:none;border:none;cursor:pointer;color:#d1d5db;padding:3px;display:flex;align-items:center;transition:color .15s;}
+.del-row-btn:hover{color:#ef4444;}
+.total-row{display:flex;justify-content:flex-end;padding:10px 18px;border-top:1px solid #f0f2f5;background:#fafbfc;}
 .total-amt{font-size:14px;font-weight:700;min-width:130px;text-align:right;}
 .total-amt.neg{color:#ef4444;}
-
-/* ── Net row ── */
-.net-card{background:#fff;border:1px solid #e8ebf0;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
-.net-lbl{font-size:15px;font-weight:800;letter-spacing:.2px;}
-.net-amt{font-size:20px;font-weight:800;}
+.net-card{background:#fff;border:1px solid #e8ebf0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.net-lbl{font-size:14px;font-weight:800;}
+.net-amt{font-size:18px;font-weight:800;}
 .net-amt.neg{color:#ef4444;}
 
-/* ── Export btn ── */
-.export-wrap{position:absolute;top:0;right:0;}
-
 /* ── Toast ── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:#1f2430;color:#fff;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:999;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a2e44;color:#fff;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:999;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── Overlay ── */
-#ov{display:none;position:fixed;inset:0;z-index:200;}
+/* ── Chat bubble ── */
+.chat-bubble{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:#6c5ce7;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.chat-bubble svg{color:#fff;}
 
-@media(max-width:820px){
+/* ── Transactions showing ── */
+.txn-showing{font-size:14px;margin-bottom:14px;color:#374151;}
+.txn-showing b{color:#555;}
+
+@media(max-width:900px){
   .summary-row{grid-template-columns:1fr 1fr;}
   .filter-panel{width:calc(100vw - 40px);}
-}
-@media(max-width:520px){
-  .summary-row{grid-template-columns:1fr;}
-  .tabnav{gap:0;overflow-x:auto;}
-  .tab{padding:14px 14px;font-size:12px;}
-  .page{padding:20px 16px 40px;}
 }
 </style>
 </head>
 <body>
 
-<div id="ov"></div>
-
-<!-- ══════════ TOP BAR ══════════ -->
+<!-- ══ TOP BAR ══ -->
 <div class="topbar">
-  <div class="hamburger">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="hamburger"><span></span><span></span><span></span></div>
   <div class="topbar-title">REPORTS</div>
-
-  <!-- Export (top-right) -->
-  <div style="margin-left:auto;">
-    <div class="dd-wrap" id="ddExport">
-      <div class="dd-btn" onclick="toggleDD('ddExport')">
-        Export
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="dd-menu">
-        <div class="dd-item" onclick="doExport('csv')">
-          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
-          Export as CSV
-        </div>
-        <div class="dd-item" onclick="doExport('print')">
-          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><rect x="6" y="17" width="12" height="5"/><path d="M6 12H4a2 2 0 0 0-2 2v3h4m14-5h2a2 2 0 0 1 2 2v3h-4"/></svg>
-          Print Report
-        </div>
-        <div class="dd-sep"></div>
-        <div class="dd-item" onclick="doExport('copy')">
-          <svg style="display:inline;margin-right:8px;vertical-align:middle;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy to Clipboard
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- ══════════ TAB NAV ══════════ -->
+<!-- ══ TAB NAV ══ -->
 <div class="tabnav">
-  <div class="tab" onclick="switchTab(this)">BANK DEPOSIT</div>
-  <div class="tab" onclick="switchTab(this)">RENT ROLL</div>
-  <div class="tab" onclick="switchTab(this)">DEPOSITS HELD</div>
-  <div class="tab active" onclick="switchTab(this)">P/L REPORT</div>
-  <div class="tab" onclick="switchTab(this)">TRANSACTIONS</div>
+  <div class="tab active" data-tab="bank">BANK DEPOSIT</div>
+  <div class="tab" data-tab="rent">RENT ROLL</div>
+  <div class="tab" data-tab="deposits">DEPOSITS HELD</div>
+  <div class="tab" data-tab="pl">P/L REPORT</div>
+  <div class="tab" data-tab="txn">TRANSACTIONS</div>
 </div>
 
-<!-- ══════════ PAGE ══════════ -->
 <div class="page">
-  <div class="page-title">P/L REPORT</div>
 
-  <!-- ── Filter pill + panel ── -->
-  <div class="filter-wrap" id="filterWrap">
-    <div class="filter-pill" onclick="toggleFilter()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-      <span class="filter-pill-label">Filter</span>
-      <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-
-    <div class="filter-panel" id="filterPanel">
-      <div class="fp-grid">
-        <!-- Property -->
-        <div>
-          <div class="fp-label">Property</div>
-          <select class="fp-select" id="fpProperty">
-            <option value="">Select</option>
-            <option>Sunrise Apartments</option>
-            <option>Maple Street Complex</option>
-            <option>Green Valley Homes</option>
-            <option>Oakwood Residences</option>
-          </select>
+<!-- ════════════════════════════════════
+     TAB 1 — BANK DEPOSIT
+════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-bank">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="filter-wrap" id="fw-bank">
+        <div class="filter-pill" onclick="toggleFilter('fw-bank')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+          <span class="filter-pill-label">Filter...</span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </div>
-        <!-- Unit -->
-        <div>
-          <div class="fp-label">Unit</div>
-          <select class="fp-select" id="fpUnit">
-            <option value="">Select</option>
-            <option>Unit 101</option>
-            <option>Unit 102</option>
-            <option>Unit 201</option>
-            <option>Unit 202</option>
-            <option>Unit 301</option>
-          </select>
-        </div>
-        <!-- Taxable Entity -->
-        <div class="fp-full">
-          <div class="fp-label">Taxable Entity</div>
-          <select class="fp-select fp-select gray-bg" id="fpTaxable">
-            <option>All</option>
-            <option>Entity A</option>
-            <option>Entity B</option>
-            <option>Entity C</option>
-          </select>
-        </div>
-        <!-- Bank Account -->
-        <div class="fp-full">
-          <div class="fp-label">Bank Account</div>
-          <select class="fp-select fp-select gray-bg" id="fpBank">
-            <option>All</option>
-            <option>Chase Checking ••4521</option>
-            <option>Wells Fargo Savings ••8832</option>
-            <option>Bank of America ••1190</option>
-          </select>
-        </div>
-        <!-- Date Range + Select Year -->
-        <div class="fp-full">
-          <div class="fp-date-row">
-            <div>
-              <div class="fp-label">Date Range</div>
-              <select class="fp-select" id="fpDateRange" onchange="updateDateLabel()">
-                <option value="year">Year</option>
-                <option value="quarter">Quarter</option>
-                <option value="month">Month</option>
-                <option value="custom">Custom</option>
-              </select>
+        <div class="filter-panel">
+          <div class="fp-grid">
+            <div class="fp-full">
+              <div class="fp-lbl">Property</div>
+              <select class="fp-select"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option><option>Green Valley</option></select>
             </div>
             <div>
-              <div class="fp-label"><span>Select Year</span></div>
-              <select class="fp-select" id="fpYear" onchange="updateDateLabel()">
-                <option>2026</option>
-                <option>2025</option>
-                <option>2024</option>
-                <option>2023</option>
-              </select>
+              <div class="fp-lbl">Tenant Name</div>
+              <select class="fp-select"><option value="">Select</option><option>CB Tiwari</option><option>Priyanka V.</option><option>Niketan C.</option></select>
             </div>
+            <div>
+              <div class="fp-lbl">Invoice #</div>
+              <input class="fp-input" type="text" placeholder="Invoice Id">
+            </div>
+            <div>
+              <div class="fp-lbl">Bank Account</div>
+              <select class="fp-select"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Invoice Type</div>
+              <select class="fp-select"><option value="">Select</option><option>Rent</option><option>Deposit</option><option>Late Fee</option></select>
+            </div>
+            <div class="fp-full">
+              <div class="fp-3col">
+                <div>
+                  <div class="fp-lbl">Date Range</div>
+                  <select class="fp-select" id="bank-range" onchange="updateBankRange()">
+                    <option>Month</option><option>Quarter</option><option>Year</option><option>Custom</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="fp-lbl">Select Month</div>
+                  <select class="fp-select">
+                    <option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option selected>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="fp-lbl">Select Year</div>
+                  <select class="fp-select"><option>2026</option><option>2025</option><option>2024</option></select>
+                </div>
+              </div>
+            </div>
+            <div class="fp-full" style="margin-top:2px;">
+              <div class="fp-checkbox-row"><input type="checkbox" id="cb-unmapped" checked><label for="cb-unmapped">Include Unmapped transactions</label></div>
+              <div class="fp-checkbox-row"><input type="checkbox" id="cb-offline"><label for="cb-offline">Include Offline Payments Only</label></div>
+            </div>
+          </div>
+          <div class="fp-footer">
+            <button class="clear-btn" onclick="clearFilter('fw-bank')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+            <button class="apply-btn" onclick="applyFilter('fw-bank')">Apply Filters</button>
           </div>
         </div>
       </div>
-      <div class="fp-footer">
-        <button class="clear-btn" onclick="clearFilters()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          Clear Filters
-        </button>
-        <button class="apply-btn" onclick="applyFilters()">Apply Filters</button>
+    </div>
+    <button class="export-btn" onclick="showToast('Exporting...')">Export</button>
+  </div>
+
+  <div class="bd-layout">
+    <div class="bd-table-wrap">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Account Name</th><th>Account Number</th><th>Date of Deposit</th>
+            <th>Collected</th><th>Transaction Fee</th><th>Deposited</th><th>Reconciled</th>
+          </tr></thead>
+          <tbody>
+            <tr><td colspan="7" class="no-records">No Records Found</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="bd-side">
+      <div class="bd-card orange">
+        <div class="bd-amt">$0.00</div>
+        <div class="bd-lbl">PROCESSING</div>
+      </div>
+      <div class="bd-card teal">
+        <div class="bd-amt">$0.00</div>
+        <div class="bd-lbl">TOTAL DEPOSITED</div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Date range label -->
-  <div class="date-range-text" id="dateRangeText">JANUARY 1, 2026 – DECEMBER 31, 2026</div>
+<!-- ════════════════════════════════════
+     TAB 2 — RENT ROLL
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-rent">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="filter-wrap" id="fw-rent">
+        <div class="filter-pill" onclick="toggleFilter('fw-rent')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+          <span class="filter-pill-label" id="rent-filter-lbl">Filter... <b>Term Status: Active ;</b></span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="filter-panel" style="width:380px;">
+          <div class="fp-grid" style="grid-template-columns:1fr;">
+            <div>
+              <div class="fp-lbl">Property</div>
+              <select class="fp-select"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Bank Account</div>
+              <select class="fp-select"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Lease Status</div>
+              <div class="fp-checkbox-row" style="flex-wrap:wrap;gap:12px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" checked style="accent-color:#1a6fa8;">Active</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:#1a6fa8;">Future</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:#1a6fa8;">Past</label>
+              </div>
+              <div class="fp-checkbox-row" style="margin-top:8px;">
+                <input type="checkbox" id="cb-archived"><label for="cb-archived" style="font-size:13px;color:#5a7a9a;">View Archived Leases Only</label>
+              </div>
+            </div>
+            <div>
+              <div class="fp-lbl">Property Unit Type</div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:#1a6fa8;">Employee</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:#1a6fa8;">Down</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:#1a6fa8;">Model</label>
+              </div>
+            </div>
+          </div>
+          <div class="fp-footer">
+            <button class="clear-btn" onclick="clearFilter('fw-rent')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+            <button class="apply-btn" onclick="applyFilter('fw-rent')">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="export-btn" onclick="showToast('Exporting...')">Export</button>
+  </div>
 
-  <!-- ── Summary + Overview ── -->
+  <div class="subtabs">
+    <div class="subtab active" onclick="switchSubtab(this,'rent')">Active Leases</div>
+    <div class="subtab" onclick="switchSubtab(this,'rent')">Future Leases</div>
+    <div class="subtab" onclick="switchSubtab(this,'rent')">Past Leases</div>
+    <div class="subtab" onclick="switchSubtab(this,'rent')">All</div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Property Details</th><th>Unit</th><th class="sortable">Lease Start <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Lease End <span class="sort-icon">⇅</span></th><th>Tenants</th>
+        <th class="sortable">Rent <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $14,000.00)</small></th>
+        <th class="sortable">Other Recurring <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $0.00)</small></th>
+        <th class="sortable">Total Due on Lease <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $240,254.00)</small></th>
+        <th class="sortable">Deposit <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $4,600.00)</small></th>
+        <th class="sortable">Balance Owed <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $178,300.00)</small></th>
+        <th class="sortable">Total Credits <span class="sort-icon">⇅</span><br><small style="font-weight:400;color:#9ca3af;">(Total - $0.00)</small></th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="prop-detail"><span class="prop-name">Villa Rock Graden</span><br><span class="prop-addr">15 Emerson Ave, Mayville, New York 14757</span></td>
+          <td>unit 405</td><td>Nov 1, 2025</td><td>Jan 31, 2027</td><td>CB Tiwari ...</td>
+          <td>$5,000.00</td><td>$0.00</td><td>$91,500.00</td><td>$600.00</td><td>$50,000.00</td><td>$0.00</td>
+        </tr>
+        <tr>
+          <td class="prop-detail"><span class="prop-name">Rental House</span><br><span class="prop-addr">Pinkham Road, Bristol, Maine 04554</span></td>
+          <td>Tower A</td><td>Dec 3, 2025</td><td>Nov 11, 2026</td><td>Priyanka V...</td>
+          <td>$4,000.00</td><td>$0.00</td><td>$60,054.00</td><td>$0.00</td><td>$39,600.00</td><td>$0.00</td>
+        </tr>
+        <tr>
+          <td class="prop-detail"><span class="prop-name">Ashiyana</span><br><span class="prop-addr">Carolina Avenue Northwest, Winston-Salem, North Carolina 27101</span></td>
+          <td>Ashiyana Suits</td><td>Oct 25, 2025</td><td>Jan 29, 2027</td><td>Niketan C...</td>
+          <td>$5,000.00</td><td>$0.00</td><td>$88,700.00</td><td>$4,000.00</td><td>$88,700.00</td><td>$0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 3 — DEPOSITS HELD
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-deposits">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="filter-wrap" id="fw-deposits">
+        <div class="filter-pill" onclick="toggleFilter('fw-deposits')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+          <span class="filter-pill-label">Filter...</span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="filter-panel" style="width:480px;">
+          <div class="fp-grid">
+            <div class="fp-full">
+              <div class="fp-lbl">Invoice</div>
+              <input class="fp-input" type="text" placeholder="Enter ID">
+            </div>
+            <div>
+              <div class="fp-lbl">Property</div>
+              <select class="fp-select"><option value="">Select</option><option>5E</option><option>Ashiyana</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Unit</div>
+              <select class="fp-select"><option value="">Select</option><option>5E-212</option><option>Ashiyana Suits</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">From</div>
+              <div class="date-input-wrap"><input type="date" placeholder="Select Date"></div>
+            </div>
+            <div>
+              <div class="fp-lbl">To</div>
+              <div class="date-input-wrap"><input type="date" placeholder="Select Date"></div>
+            </div>
+            <div class="fp-full">
+              <div class="fp-lbl">Payment Method</div>
+              <select class="fp-select"><option value="">Select</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option><option>Online</option></select>
+            </div>
+          </div>
+          <div class="fp-footer">
+            <button class="clear-btn" onclick="clearFilter('fw-deposits')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+            <button class="apply-btn" onclick="applyFilter('fw-deposits')">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+      <span class="showing">Showing <b>2 of 2</b></span>
+    </div>
+    <button class="export-btn" onclick="showToast('Exporting...')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+  </div>
+
+  <div class="refresh-note">(This data is 5 minutes old) <a onclick="showToast('Refreshed!')">Refresh Now</a></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th class="sortable">ID <span class="sort-icon">▼</span></th>
+        <th class="sortable">Due On <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Property <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Property Unit <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Amount <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Lease End Date <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Tenant Name <span class="sort-icon">⇅</span></th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="expand-arrow">∨</span> 11435509</td>
+          <td>Oct 28, 2025</td><td>5E</td><td>5E-212</td>
+          <td>$2,000.00</td><td>M to M</td><td>Jai Kishan</td>
+          <td style="white-space:nowrap;">
+            <button class="action-btn">View</button>
+            <button class="action-btn">Return</button>
+            <button class="action-btn">Apply</button>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="expand-arrow">∨</span> 11416270</td>
+          <td>Oct 31, 2025</td><td>Ashiyana</td><td>Ashiyana Suits</td>
+          <td>$4,000.00</td><td>Jan 29, 2027</td><td>Jai Kishan + 1</td>
+          <td style="white-space:nowrap;">
+            <button class="action-btn">View</button>
+            <button class="action-btn">Return</button>
+            <button class="action-btn">Apply</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 4 — P/L REPORT
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-pl">
+  <div class="page-title" style="margin-bottom:16px;">P/L REPORT</div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="filter-wrap" id="fw-pl">
+        <div class="filter-pill" onclick="toggleFilter('fw-pl')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+          <span class="filter-pill-label">Filter</span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="filter-panel" style="width:620px;">
+          <div class="fp-grid">
+            <div>
+              <div class="fp-lbl">Property</div>
+              <select class="fp-select"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option><option>Green Valley</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Unit</div>
+              <select class="fp-select"><option value="">Select</option><option>Unit 101</option><option>Unit 201</option><option>Unit 301</option></select>
+            </div>
+            <div class="fp-full">
+              <div class="fp-lbl">Taxable Entity</div>
+              <select class="fp-select" style="background-color:#f7f8fa;"><option>All</option><option>Entity A</option><option>Entity B</option></select>
+            </div>
+            <div class="fp-full">
+              <div class="fp-lbl">Bank Account</div>
+              <select class="fp-select" style="background-color:#f7f8fa;"><option>All</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select>
+            </div>
+            <div class="fp-full">
+              <div class="fp-date-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div>
+                  <div class="fp-lbl">Date Range</div>
+                  <select class="fp-select" id="pl-range" onchange="updatePLDate()">
+                    <option value="year">Year</option><option value="quarter">Quarter</option><option value="month">Month</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="fp-lbl" style="color:#1a6fa8;">Select Year</div>
+                  <select class="fp-select" id="pl-year" onchange="updatePLDate()">
+                    <option>2026</option><option>2025</option><option>2024</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fp-footer">
+            <button class="clear-btn" onclick="clearFilter('fw-pl')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+            <button class="apply-btn" onclick="applyFilter('fw-pl')">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="export-btn" onclick="showToast('Exporting...')">Export</button>
+  </div>
+
+  <div style="font-size:13px;font-weight:700;letter-spacing:.4px;color:#6b7280;margin-bottom:20px;" id="pl-date-label">JANUARY 1, 2026 – DECEMBER 31, 2026</div>
+
+  <!-- Summary + Overview -->
   <div class="summary-row">
     <div class="stat-card">
-      <div class="stat-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7cb342" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="#7cb342" stroke="none"/></svg>
-      </div>
+      <div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7cb342" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="#7cb342" stroke="none"/></svg></div>
       <div class="stat-lbl">INCOME</div>
-      <div class="stat-val" id="sumIncome">$0.00</div>
+      <div class="stat-val" id="pl-sum-income">$0.00</div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e8823f" stroke-width="1.8"><path d="M3 8h14a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/><circle cx="16" cy="14" r="1.5" fill="#e8823f" stroke="none"/></svg>
-      </div>
+      <div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e8823f" stroke-width="1.8"><path d="M3 8h14a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/><circle cx="16" cy="14" r="1.5" fill="#e8823f" stroke="none"/></svg></div>
       <div class="stat-lbl">EXPENSES</div>
-      <div class="stat-val neg" id="sumExpenses">($0.00)</div>
+      <div class="stat-val neg" id="pl-sum-exp">($0.00)</div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4f86c6" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/></svg>
-      </div>
+      <div class="stat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4f86c6" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/></svg></div>
       <div class="stat-lbl">NET PROFIT/LOSS</div>
-      <div class="stat-val" id="sumNet">$0.00</div>
+      <div class="stat-val" id="pl-sum-net">$0.00</div>
     </div>
-
-    <!-- Overview -->
     <div class="overview-card">
       <div class="ov-top">
         <h3>OVERVIEW</h3>
-        <div class="dd-wrap" id="ddPeriod">
-          <div class="dd-btn" onclick="toggleDD('ddPeriod')">
-            <span id="periodLbl">Same Period Last Year</span>
+        <div class="mini-dd-wrap" id="dd-period">
+          <div class="mini-dd-btn" onclick="toggleMiniDD('dd-period')">
+            <span id="period-lbl">Same Period Last Year</span>
             <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="dd-menu">
-            <div class="dd-item" onclick="setPeriod('Same Period Last Year','2025')">Same Period Last Year</div>
-            <div class="dd-item" onclick="setPeriod('Previous Quarter','Q3 2025')">Previous Quarter</div>
-            <div class="dd-item" onclick="setPeriod('Previous Month','Dec 2025')">Previous Month</div>
-            <div class="dd-sep"></div>
-            <div class="dd-item" onclick="setPeriod('No Comparison','—')">No Comparison</div>
+          <div class="mini-dd-menu">
+            <div class="mini-dd-item" onclick="setPeriod('Same Period Last Year','2025')">Same Period Last Year</div>
+            <div class="mini-dd-item" onclick="setPeriod('Previous Quarter','Q3 2025')">Previous Quarter</div>
+            <div class="mini-dd-item" onclick="setPeriod('Previous Month','Dec 2025')">Previous Month</div>
+            <div class="mini-dd-sep"></div>
+            <div class="mini-dd-item" onclick="setPeriod('No Comparison','—')">No Comparison</div>
           </div>
         </div>
       </div>
       <div>
         <div class="cmp-row">
-          <span class="bar-val" id="bStartCur" style="text-align:right;">$0.00</span>
+          <span class="bar-val" id="b-start-cur" style="text-align:right;">$0.00</span>
           <span class="dot cur"></span>
           <span class="yr-lbl">2026</span>
-          <div class="bar-track"><div class="bar-fill cur" id="bCur" style="width:0%"></div></div>
-          <span class="bar-val" id="bEndCur">$0.00</span>
+          <div class="bar-track"><div class="bar-fill cur" id="b-cur" style="width:0%"></div></div>
+          <span class="bar-val" id="b-end-cur">$0.00</span>
         </div>
         <div class="cmp-row">
-          <span class="bar-val" id="bStartPri" style="text-align:right;">$0.00</span>
+          <span class="bar-val" id="b-start-pri" style="text-align:right;">$0.00</span>
           <span class="dot pri"></span>
-          <span class="yr-lbl" id="priorLbl">2025</span>
-          <div class="bar-track"><div class="bar-fill pri" id="bPri" style="width:0%"></div></div>
-          <span class="bar-val" id="bEndPri">$0.00</span>
+          <span class="yr-lbl" id="prior-lbl">2025</span>
+          <div class="bar-track"><div class="bar-fill pri" id="b-pri" style="width:0%"></div></div>
+          <span class="bar-val" id="b-end-pri">$0.00</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ══ INCOME SECTION ══ -->
-  <div class="section">
+  <!-- Income section -->
+  <div class="pl-section">
     <div class="sec-header">
       <span class="sec-title">INCOME</span>
-      <button class="add-btn" onclick="addRow('income')">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        Add Income
+      <button class="add-row-btn" onclick="addPlRow('income')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Income
       </button>
     </div>
-    <div id="incomeRows"></div>
-    <div class="total-row">
-      <span class="total-amt" id="incomeTotal">$0.00</span>
-    </div>
+    <div id="pl-income-rows"></div>
+    <div class="total-row"><span class="total-amt" id="pl-income-total">$0.00</span></div>
   </div>
 
-  <!-- ══ EXPENSES SECTION ══ -->
-  <div class="section">
+  <!-- Expenses section -->
+  <div class="pl-section">
     <div class="sec-header">
       <span class="sec-title">EXPENSES</span>
-      <button class="add-btn" onclick="addRow('expense')">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        Add Expense
+      <button class="add-row-btn" onclick="addPlRow('expense')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Expense
       </button>
     </div>
-    <div id="expenseRows"></div>
-    <div class="total-row">
-      <span class="total-amt neg" id="expenseTotal">($0.00)</span>
-    </div>
+    <div id="pl-expense-rows"></div>
+    <div class="total-row"><span class="total-amt neg" id="pl-expense-total">($0.00)</span></div>
   </div>
 
-  <!-- ══ NET PROFIT/LOSS ══ -->
   <div class="net-card">
     <span class="net-lbl">NET PROFIT / LOSS</span>
-    <span class="net-amt" id="netAmt">$0.00</span>
+    <span class="net-amt" id="pl-net">$0.00</span>
   </div>
+</div>
+
+<!-- ════════════════════════════════════
+     TAB 5 — TRANSACTIONS
+════════════════════════════════════ -->
+<div class="tab-panel" id="tab-txn">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="filter-wrap" id="fw-txn">
+        <div class="filter-pill" style="min-width:160px;" onclick="toggleFilter('fw-txn')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+          <span class="filter-pill-label">Filters</span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="filter-panel" style="width:540px;">
+          <div class="fp-grid">
+            <div>
+              <div class="fp-lbl">Property</div>
+              <select class="fp-select"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Unit</div>
+              <select class="fp-select"><option value="">Select</option><option>unit 405</option><option>Tower A</option><option>Ashiyana Suits</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Tenant</div>
+              <select class="fp-select"><option value="">Select</option><option>CB Tiwari</option><option>Social Code</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Payment Status</div>
+              <select class="fp-select"><option value="">All</option><option>Success</option><option>Pending</option><option>Failed</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Payment Mode</div>
+              <select class="fp-select"><option value="">All</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select>
+            </div>
+            <div>
+              <div class="fp-lbl">Date Range</div>
+              <select class="fp-select"><option>Month</option><option>Quarter</option><option>Year</option></select>
+            </div>
+          </div>
+          <div class="fp-footer">
+            <button class="clear-btn" onclick="clearFilter('fw-txn')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+            <button class="apply-btn" onclick="applyFilter('fw-txn')">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="export-report-btn" onclick="showToast('Exporting report...')">Export Report</button>
+  </div>
+
+  <div class="txn-showing">Showing <b>30 of 24</b></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th class="sortable">Property/Unit <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Invoice ID <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Tenant <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Payment Date <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Payment Status <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Due Date <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Transaction Amount <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Initial Invoice Amount <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Amount Deposited <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Remaining due after payment <span class="sort-icon">⇅</span></th>
+        <th class="sortable">Payment Mode <span class="sort-icon">⇅</span></th>
+      </tr></thead>
+      <tbody id="txn-tbody">
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774141</td><td>CB Tiwari</td><td>Jun 20, 2026</td><td><span class="badge success">Success</span></td><td>Mar 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$3,500.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774150</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Dec 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774146</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Aug 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774148</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Oct 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774149</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Nov 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774144</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jun 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774145</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jul 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774143</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>May 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$0.00</td><td>Cash</td></tr>
+        <tr><td class="prop-detail"><span class="prop-name">Villa Rock...</span><br><small>unit 405</small></td><td>12774142</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Sep 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<!-- Chat bubble -->
+<div class="chat-bubble">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Data ─────────────────────────────────────────────────
-let incomeRows  = [
-  {id:1,name:'Rent',amount:69500},
-  {id:2,name:'Late Fee Charge',amount:23600},
-  {id:3,name:'Water',amount:454}
-];
-let expenseRows = [
-  {id:4,name:'Advertising',amount:100},
-  {id:5,name:'Appliance',amount:200}
-];
-let nextId = 6;
-let priorNet = 0;
+// ═══ TAB SWITCHING ═══
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+    closeAllFilters();
+  });
+});
 
-// ─── Overlay / dropdown logic ─────────────────────────────
-const ovEl = document.getElementById('ov');
-
-function toggleDD(id){
-  const el = document.getElementById(id);
-  const wasOpen = el.classList.contains('open');
-  closeAll();
-  if(!wasOpen){ el.classList.add('open'); ovEl.style.display='block'; }
-}
-
-function closeAll(){
-  document.querySelectorAll('.dd-wrap').forEach(d=>d.classList.remove('open'));
-  ovEl.style.display='none';
-}
-
-ovEl.addEventListener('click', ()=>{ closeAll(); closeFilter(); });
-
-// ─── Tab switching ────────────────────────────────────────
-function switchTab(el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+function switchSubtab(el, group){
+  el.closest('.subtabs').querySelectorAll('.subtab').forEach(s=>s.classList.remove('active'));
   el.classList.add('active');
-  if(el.textContent.trim()!=='P/L REPORT') showToast('Switched to: '+el.textContent.trim());
 }
 
-// ─── Filter panel ─────────────────────────────────────────
-function toggleFilter(){
-  const w = document.getElementById('filterWrap');
-  if(w.classList.contains('open')){ closeFilter(); }
-  else { w.classList.add('open'); }
+// ═══ FILTER OPEN/CLOSE ═══
+// The key fix: clicking outside any filter panel closes it
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.filter-wrap').forEach(fw=>{
+    if(!fw.contains(e.target)){
+      fw.classList.remove('filter-open');
+    }
+  });
+  // Close mini dropdowns
+  document.querySelectorAll('.mini-dd-wrap').forEach(d=>{
+    if(!d.contains(e.target)) d.classList.remove('open');
+  });
+});
+
+function toggleFilter(id){
+  const fw = document.getElementById(id);
+  const isOpen = fw.classList.contains('filter-open');
+  closeAllFilters();
+  if(!isOpen) fw.classList.add('filter-open');
 }
 
-function closeFilter(){
-  document.getElementById('filterWrap').classList.remove('open');
+function closeAllFilters(){
+  document.querySelectorAll('.filter-wrap').forEach(fw=>fw.classList.remove('filter-open'));
 }
 
-function clearFilters(){
-  document.getElementById('fpProperty').value = '';
-  document.getElementById('fpUnit').value = '';
-  document.getElementById('fpTaxable').value = 'All';
-  document.getElementById('fpBank').value = 'All';
-  document.getElementById('fpDateRange').value = 'year';
-  document.getElementById('fpYear').value = '2026';
-  updateDateLabel();
+function clearFilter(id){
+  const fw = document.getElementById(id);
+  fw.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  fw.querySelectorAll('input[type=text],input[type=date]').forEach(i=>i.value='');
+  fw.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
   showToast('Filters cleared');
 }
 
-function applyFilters(){
-  const prop  = document.getElementById('fpProperty').value || 'All';
-  const year  = document.getElementById('fpYear').value;
-  const range = document.getElementById('fpDateRange').value;
-  closeFilter();
-  updateDateLabel();
-  showToast('Filters applied — '+range+' '+year+(prop!=='All'?' · '+prop:''));
+function applyFilter(id){
+  closeAllFilters();
+  showToast('Filters applied');
+  if(id==='fw-pl') updatePLDate();
 }
 
-function updateDateLabel(){
-  const yr  = document.getElementById('fpYear').value;
-  const rng = document.getElementById('fpDateRange').value;
-  const months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
-  let label = '';
-  if(rng==='year')    label = `JANUARY 1, ${yr} – DECEMBER 31, ${yr}`;
-  else if(rng==='quarter') label = `OCTOBER 1, ${yr} – DECEMBER 31, ${yr}`;
-  else if(rng==='month') label = `DECEMBER 1, ${yr} – DECEMBER 31, ${yr}`;
-  else label = `JANUARY 1, ${yr} – DECEMBER 31, ${yr}`;
-  document.getElementById('dateRangeText').textContent = label;
+// ═══ PL DATE LABEL ═══
+function updatePLDate(){
+  const yr = document.getElementById('pl-year').value;
+  const rng = document.getElementById('pl-range').value;
+  let label='';
+  if(rng==='year')    label=`JANUARY 1, ${yr} – DECEMBER 31, ${yr}`;
+  else if(rng==='quarter') label=`OCTOBER 1, ${yr} – DECEMBER 31, ${yr}`;
+  else label=`DECEMBER 1, ${yr} – DECEMBER 31, ${yr}`;
+  document.getElementById('pl-date-label').textContent=label;
 }
 
-// ─── Render rows ──────────────────────────────────────────
-function renderRows(type){
-  const rows = type==='income' ? incomeRows : expenseRows;
-  const cont = document.getElementById(type==='income'?'incomeRows':'expenseRows');
+// ═══ MINI DROPDOWN ═══
+function toggleMiniDD(id){
+  event.stopPropagation();
+  const el=document.getElementById(id);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.mini-dd-wrap').forEach(d=>d.classList.remove('open'));
+  if(!wasOpen) el.classList.add('open');
+}
+
+function setPeriod(lbl,yr){
+  document.getElementById('period-lbl').textContent=lbl;
+  document.getElementById('prior-lbl').textContent=yr;
+  document.querySelectorAll('.mini-dd-wrap').forEach(d=>d.classList.remove('open'));
+  recalcPL();
+}
+
+// ═══ P/L DATA & RECALC ═══
+let plIncome  = [{id:1,name:'Rent',amt:69500},{id:2,name:'Late Fee Charge',amt:23600},{id:3,name:'Water',amt:454}];
+let plExpense = [{id:4,name:'Advertising',amt:100},{id:5,name:'Appliance',amt:200}];
+let plNextId=6, plPriorNet=0;
+
+function fmt$(n){ return '$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function fmtD(n){ const s=fmt$(n); return n<0?'('+s+')':s; }
+function parseD(s){ return parseFloat(s.replace(/[$,()]/g,''))||0; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function renderPlRows(type){
+  const rows=type==='income'?plIncome:plExpense;
+  const cont=document.getElementById(type==='income'?'pl-income-rows':'pl-expense-rows');
   cont.innerHTML='';
   rows.forEach(r=>{
-    const d = document.createElement('div');
-    d.className='line-row';
+    const d=document.createElement('div');d.className='line-row';
     d.innerHTML=`
       <input class="line-name" type="text" placeholder="Enter description…" value="${esc(r.name)}"
-             oninput="updateName('${type}',${r.id},this.value)">
+             oninput="plUpdateName('${type}',${r.id},this.value)">
       <input class="line-amount ${type==='expense'?'neg':''}" type="text"
-             value="${r.amount>0?fmt(r.amount,type):''}" placeholder="$0.00"
-             oninput="updateAmt('${type}',${r.id},this.value)"
-             onblur="fmtField(this,'${type}',${r.id})">
-      <button class="del-btn" onclick="delRow('${type}',${r.id})" title="Delete">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+             value="${r.amt>0?(type==='expense'?'('+fmt$(r.amt)+')':fmt$(r.amt)):''}"
+             placeholder="$0.00"
+             oninput="plUpdateAmt('${type}',${r.id},this.value)"
+             onblur="plFmtField(this,'${type}',${r.id})">
+      <button class="del-row-btn" onclick="plDelRow('${type}',${r.id})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
       </button>`;
     cont.appendChild(d);
   });
-  recalc();
+  recalcPL();
 }
 
-function fmt(n,type){
-  const s='$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  return type==='expense'?'('+s+')':s;
+function plFmtField(inp,type,id){
+  const arr=type==='income'?plIncome:plExpense;
+  const r=arr.find(x=>x.id===id);
+  if(r&&r.amt>0) inp.value=type==='expense'?'('+fmt$(r.amt)+')':fmt$(r.amt);
 }
-function fmtN(n){
-  const s='$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  return n<0?'('+s+')':s;
-}
-function parseN(s){ return parseFloat(s.replace(/[$,()]/g,''))||0; }
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-
-function fmtField(inp,type,id){
-  const arr = type==='income'?incomeRows:expenseRows;
-  const r = arr.find(x=>x.id===id);
-  if(r && r.amount>0) inp.value=fmt(r.amount,type);
-}
-
-// ─── CRUD ─────────────────────────────────────────────────
-function addRow(type){
-  const arr = type==='income'?incomeRows:expenseRows;
-  arr.push({id:nextId++,name:'',amount:0});
-  renderRows(type);
-  const cont = document.getElementById(type==='income'?'incomeRows':'expenseRows');
+function plUpdateName(type,id,v){ (type==='income'?plIncome:plExpense).find(x=>x.id===id)&&((type==='income'?plIncome:plExpense).find(x=>x.id===id).name=v); }
+function plUpdateAmt(type,id,v){ const r=(type==='income'?plIncome:plExpense).find(x=>x.id===id);if(r){r.amt=parseD(v);recalcPL();} }
+function addPlRow(type){
+  (type==='income'?plIncome:plExpense).push({id:plNextId++,name:'',amt:0});
+  renderPlRows(type);
+  const cont=document.getElementById(type==='income'?'pl-income-rows':'pl-expense-rows');
   cont.lastElementChild.querySelector('.line-name').focus();
 }
-function delRow(type,id){
-  if(type==='income') incomeRows=incomeRows.filter(r=>r.id!==id);
-  else expenseRows=expenseRows.filter(r=>r.id!==id);
-  renderRows(type);
-}
-function updateName(type,id,v){
-  const arr=type==='income'?incomeRows:expenseRows;
-  const r=arr.find(x=>x.id===id);if(r)r.name=v;
-}
-function updateAmt(type,id,v){
-  const arr=type==='income'?incomeRows:expenseRows;
-  const r=arr.find(x=>x.id===id);if(r){r.amount=parseN(v);recalc();}
+function plDelRow(type,id){
+  if(type==='income') plIncome=plIncome.filter(r=>r.id!==id);
+  else plExpense=plExpense.filter(r=>r.id!==id);
+  renderPlRows(type);
 }
 
-// ─── Recalc ───────────────────────────────────────────────
-function recalc(){
-  const inc = incomeRows.reduce((s,r)=>s+r.amount,0);
-  const exp = expenseRows.reduce((s,r)=>s+r.amount,0);
-  const net = inc-exp;
-
-  document.getElementById('sumIncome').textContent  = fmtN(inc);
-  document.getElementById('sumIncome').className    = 'stat-val'+(inc<0?' neg':'');
-  document.getElementById('sumExpenses').textContent= exp>0?'('+fmtN(exp)+')':'$0.00';
-  document.getElementById('sumExpenses').className  = 'stat-val'+(exp>0?' neg':'');
-  const nEl=document.getElementById('sumNet');
-  nEl.textContent=fmtN(net); nEl.className='stat-val'+(net<0?' neg':'');
-
-  document.getElementById('incomeTotal').textContent  = fmtN(inc);
-  const etEl=document.getElementById('expenseTotal');
-  etEl.textContent=exp>0?'('+fmtN(exp)+')':'($0.00)';
-
-  const naEl=document.getElementById('netAmt');
-  naEl.textContent=fmtN(net); naEl.className='net-amt'+(net<0?' neg':'');
-
-  // bars
-  const max=Math.max(Math.abs(net),Math.abs(priorNet),1);
-  document.getElementById('bCur').style.width=(Math.abs(net)/max*100)+'%';
-  document.getElementById('bPri').style.width=(Math.abs(priorNet)/max*100)+'%';
-  document.getElementById('bStartCur').textContent=fmtN(net);
-  document.getElementById('bEndCur').textContent=fmtN(net);
-  document.getElementById('bStartPri').textContent=fmtN(priorNet);
-  document.getElementById('bEndPri').textContent=fmtN(priorNet);
+function recalcPL(){
+  const inc=plIncome.reduce((s,r)=>s+r.amt,0);
+  const exp=plExpense.reduce((s,r)=>s+r.amt,0);
+  const net=inc-exp;
+  document.getElementById('pl-sum-income').textContent=fmtD(inc);
+  document.getElementById('pl-sum-income').className='stat-val'+(inc<0?' neg':'');
+  document.getElementById('pl-sum-exp').textContent=exp>0?'('+fmt$(exp)+')':'$0.00';
+  document.getElementById('pl-sum-exp').className='stat-val'+(exp>0?' neg':'');
+  const nEl=document.getElementById('pl-sum-net');
+  nEl.textContent=fmtD(net); nEl.className='stat-val'+(net<0?' neg':'');
+  document.getElementById('pl-income-total').textContent=fmt$(inc);
+  document.getElementById('pl-expense-total').textContent=exp>0?'('+fmt$(exp)+')':'($0.00)';
+  const naEl=document.getElementById('pl-net');
+  naEl.textContent=fmtD(net); naEl.className='net-amt'+(net<0?' neg':'');
+  const max=Math.max(Math.abs(net),Math.abs(plPriorNet),1);
+  document.getElementById('b-cur').style.width=(Math.abs(net)/max*100)+'%';
+  document.getElementById('b-pri').style.width=(Math.abs(plPriorNet)/max*100)+'%';
+  document.getElementById('b-start-cur').textContent=fmtD(net);
+  document.getElementById('b-end-cur').textContent=fmtD(net);
+  document.getElementById('b-start-pri').textContent=fmtD(plPriorNet);
+  document.getElementById('b-end-pri').textContent=fmtD(plPriorNet);
 }
 
-// ─── Period ───────────────────────────────────────────────
-function setPeriod(lbl,yr){
-  document.getElementById('periodLbl').textContent=lbl;
-  document.getElementById('priorLbl').textContent=yr;
-  closeAll();
-  showToast('Comparison: '+lbl);
-  recalc();
-}
-
-// ─── Export ───────────────────────────────────────────────
-function doExport(t){
-  closeAll();
-  if(t==='print'){window.print();return;}
-  if(t==='csv'){
-    const lines=['Category,Name,Amount'];
-    incomeRows.forEach(r=>lines.push('Income,"'+r.name+'",'+r.amount.toFixed(2)));
-    expenseRows.forEach(r=>lines.push('Expense,"'+r.name+'",'+(r.amount*-1).toFixed(2)));
-    const inc=incomeRows.reduce((s,r)=>s+r.amount,0);
-    const exp=expenseRows.reduce((s,r)=>s+r.amount,0);
-    lines.push('','Total Income,,'+inc.toFixed(2),'Total Expenses,,'+(exp*-1).toFixed(2),'Net Profit/Loss,,'+(inc-exp).toFixed(2));
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
-    a.download='pl_report.csv'; a.click();
-    showToast('CSV downloaded');return;
-  }
-  if(t==='copy'){
-    const inc=incomeRows.reduce((s,r)=>s+r.amount,0);
-    const exp=expenseRows.reduce((s,r)=>s+r.amount,0);
-    const lines=['P/L REPORT',''];
-    lines.push('INCOME');
-    incomeRows.forEach(r=>lines.push('  '+r.name+': '+fmtN(r.amount)));
-    lines.push('  Total: '+fmtN(inc),'');
-    lines.push('EXPENSES');
-    expenseRows.forEach(r=>lines.push('  '+r.name+': ('+fmtN(r.amount)+')'));
-    lines.push('  Total: ('+fmtN(exp)+')','');
-    lines.push('NET PROFIT/LOSS: '+fmtN(inc-exp));
-    navigator.clipboard.writeText(lines.join('\n')).then(()=>showToast('Copied to clipboard'));
-  }
-}
-
-// ─── Toast ────────────────────────────────────────────────
+// ═══ TOAST ═══
 let tTimer;
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
-  clearTimeout(tTimer); tTimer=setTimeout(()=>t.classList.remove('show'),2300);
+  clearTimeout(tTimer); tTimer=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// ─── Init ─────────────────────────────────────────────────
-renderRows('income');
-renderRows('expense');
+// ═══ INIT ═══
+renderPlRows('income');
+renderPlRows('expense');
 </script>
 </body>
 </html>
