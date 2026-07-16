@@ -6,59 +6,57 @@
 <title>Reports</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f6f8;color:#1a1a2e;font-size:14px;min-height:100vh;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f6f8;color:#1a1a2e;font-size:14px;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ── Variables ── */
 :root{
   --orange:#e8450a;
   --orange-light:#fff2ee;
-  --orange-mid:#ffddd4;
   --green:#1a7a4a;
   --green-light:#eaf7f0;
-  --green-mid:#c6edd9;
+  --sidebar-w:220px;
 }
 
 /* ══ TOP HEADER ══ */
-.top-header{display:flex;align-items:center;background:#fff;padding:14px 28px;border-bottom:1px solid #f0f0f0;gap:14px;}
+.top-header{display:flex;align-items:center;background:#fff;padding:13px 28px;border-bottom:1px solid #f0f0f0;gap:14px;position:sticky;top:0;z-index:500;}
 .header-icon{width:42px;height:42px;border-radius:10px;background:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .header-icon svg{color:#fff;}
 .header-text h1{font-size:18px;font-weight:800;line-height:1.1;}
 .header-text h1 span.org{color:var(--orange);}
 .header-text p{font-size:12px;color:#8a94a6;margin-top:2px;}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
-.notif-btn{width:36px;height:36px;border-radius:50%;border:1px solid #e8ebf0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.notif-btn{width:36px;height:36px;border-radius:50%;border:1px solid #e8ebf0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s;}
+.notif-btn:hover{border-color:var(--orange);}
 .notif-btn svg{color:#7a8fa6;}
-.user-pill{display:flex;align-items:center;gap:10px;cursor:pointer;}
-.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--orange);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;}
-.user-info{line-height:1.3;}
-.user-info .u-name{font-size:13px;font-weight:700;color:#1a1a2e;}
-.user-info .u-role{font-size:11px;color:#8a94a6;}
-.user-pill svg{color:#8a94a6;}
 
-/* ══ TAB BAR ══ */
-.tabbar-wrap{background:#fff;padding:0 28px;}
-.tabbar{display:flex;gap:0;background:var(--orange-light);border-radius:12px;padding:6px;gap:2px;margin:16px 0;}
-.tab{padding:10px 22px;font-size:13px;font-weight:600;color:#7a8fa6;cursor:pointer;border-radius:8px;transition:all .18s;white-space:nowrap;user-select:none;}
-.tab:hover{color:#e8450a;background:rgba(232,69,10,.07);}
-.tab.active{color:var(--orange);background:#fff;box-shadow:0 2px 8px rgba(232,69,10,.12);font-weight:700;}
+/* ══ BODY LAYOUT ══ */
+.body-wrap{display:flex;flex:1;min-height:0;}
 
-/* ══ PAGE BODY ══ */
-.page{padding:20px 28px 60px;}
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar-w);background:#fff;border-right:1px solid #f0f0f0;padding:20px 14px;flex-shrink:0;position:sticky;top:69px;height:calc(100vh - 69px);overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;color:#6b7280;font-size:14px;font-weight:600;transition:all .16s;margin-bottom:4px;user-select:none;}
+.nav-item svg{flex-shrink:0;color:#9ca3af;transition:color .16s;}
+.nav-item:hover{background:var(--orange-light);color:var(--orange);}
+.nav-item:hover svg{color:var(--orange);}
+.nav-item.active{background:var(--orange-light);color:var(--orange);font-weight:700;}
+.nav-item.active svg{color:var(--orange);}
+
+/* ══ MAIN ══ */
+.main{flex:1;min-width:0;padding:24px 28px 60px;}
 
 /* ══ TOOLBAR ══ */
-.toolbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;position:relative;z-index:300;}
-.toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.toolbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:300;}
+.toolbar-left{display:flex;align-items:center;gap:10px;}
 
 /* ══ FILTER PILL ══ */
 .filter-wrap{position:relative;}
-.filter-pill{display:inline-flex;align-items:center;gap:8px;border:1.5px solid #e2e5ea;border-radius:8px;padding:9px 16px;background:#fff;cursor:pointer;min-width:160px;user-select:none;transition:border-color .15s;font-size:13px;color:#555;font-weight:500;}
+.filter-pill{display:inline-flex;align-items:center;gap:8px;border:1.5px solid #e2e5ea;border-radius:9px;padding:9px 16px;background:#fff;cursor:pointer;min-width:160px;user-select:none;transition:border-color .15s;font-size:13px;color:#555;font-weight:500;}
 .filter-pill svg{color:#7a8fa6;}
 .filter-pill .chev{margin-left:auto;transition:transform .2s;color:#9ca3af;}
 .filter-open .filter-pill{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,69,10,.08);}
 .filter-open .filter-pill .chev{transform:rotate(180deg);}
 
 /* ══ FILTER PANEL ══ */
-.filter-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1.5px solid #e2e5ea;border-radius:14px;box-shadow:0 10px 36px rgba(0,0,0,.12);padding:22px 22px 18px;z-index:400;min-width:480px;}
+.filter-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1.5px solid #e2e5ea;border-radius:14px;box-shadow:0 10px 36px rgba(0,0,0,.12);padding:22px 22px 18px;z-index:400;min-width:460px;}
 .filter-open .filter-panel{display:block;}
 .fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;margin-bottom:18px;}
 .fp-full{grid-column:1/-1;}
@@ -79,7 +77,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .apply-btn:hover{background:#c93a08;}
 
 /* ══ EXPORT BTN ══ */
-.export-btn{display:inline-flex;align-items:center;gap:7px;border:1.5px solid #e2e5ea;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--orange);background:#fff;cursor:pointer;transition:border-color .15s;}
+.export-btn{display:inline-flex;align-items:center;gap:7px;border:1.5px solid #e2e5ea;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--orange);background:#fff;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .export-btn:hover{border-color:var(--orange);background:var(--orange-light);}
 .export-btn svg{color:var(--orange);}
 
@@ -89,17 +87,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 /* ══ BANK DEPOSIT LAYOUT ══ */
 .bd-layout{display:flex;gap:16px;align-items:flex-start;}
 .bd-table-wrap{flex:1;min-width:0;}
-.bd-side{display:flex;flex-direction:column;gap:14px;min-width:200px;max-width:220px;}
+.bd-side{display:flex;flex-direction:column;gap:14px;min-width:190px;max-width:210px;}
 
-/* ══ STAT CARDS (BANK DEPOSIT) ══ */
+/* ══ BD STAT CARDS ══ */
 .bd-card{border-radius:14px;padding:20px 18px;}
 .bd-card.orange-card{background:var(--orange-light);}
 .bd-card.green-card{background:var(--green-light);}
-.bd-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.bd-card-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
 .bd-card.orange-card .bd-card-icon{background:var(--orange);}
 .bd-card.green-card .bd-card-icon{background:var(--green);}
 .bd-card-icon svg{color:#fff;}
-.bd-card-amt{font-size:26px;font-weight:800;margin-bottom:4px;}
+.bd-card-amt{font-size:28px;font-weight:800;margin-bottom:5px;}
 .bd-card.orange-card .bd-card-amt{color:var(--orange);}
 .bd-card.green-card .bd-card-amt{color:var(--green);}
 .bd-card-lbl{font-size:11px;font-weight:700;letter-spacing:.5px;color:#8a94a6;}
@@ -116,20 +114,20 @@ tr:last-child td{border-bottom:none;}
 tr:hover td{background:#fdfefe;}
 
 /* ══ EMPTY STATE ══ */
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;}
-.empty-icon-wrap{width:70px;height:70px;border-radius:50%;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;}
+.empty-icon-wrap{width:72px;height:72px;border-radius:50%;background:var(--orange-light);display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
 .empty-icon-wrap svg{color:var(--orange);}
 .empty-title{font-size:15px;font-weight:700;color:#374151;margin-bottom:6px;}
 .empty-sub{font-size:13px;color:#9ca3af;}
 
-/* ══ SHOWING COUNT ══ */
-.showing-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:13px;color:#555;}
+/* ══ SHOWING / REFRESH ══ */
+.showing-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:13px;color:#555;}
 .showing-row b{color:#1a1a2e;}
 .refresh-link{color:var(--orange);font-weight:600;cursor:pointer;}
 
 /* ══ SUBTABS ══ */
-.subtabs{display:flex;gap:6px;margin-bottom:16px;}
-.stab{padding:7px 18px;font-size:13px;font-weight:600;color:#7a8fa6;cursor:pointer;border-radius:7px;transition:all .15s;}
+.subtabs{display:flex;gap:4px;margin-bottom:16px;}
+.stab{padding:7px 18px;font-size:13px;font-weight:600;color:#7a8fa6;cursor:pointer;border-radius:8px;transition:all .15s;}
 .stab:hover{background:var(--orange-light);color:var(--orange);}
 .stab.active{background:var(--orange-light);color:var(--orange);font-weight:700;}
 
@@ -147,10 +145,10 @@ tr:hover td{background:#fdfefe;}
 .act-btn{border:1.5px solid var(--orange);color:var(--orange);background:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;transition:background .15s;}
 .act-btn:hover{background:var(--orange-light);}
 
-/* ══ PL STAT CARDS ══ */
+/* ══ FINANCE (P/L) STAT CARDS ══ */
 .pl-summary{display:grid;grid-template-columns:1fr 1fr 1fr 2.1fr;gap:14px;margin-bottom:22px;}
 .pl-card{border-radius:12px;padding:16px 14px 18px;text-align:center;background:#fff;border:1.5px solid #f0f2f5;}
-.pl-card-icon{width:34px;height:34px;border-radius:9px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
+.pl-card-icon{width:36px;height:36px;border-radius:9px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
 .pl-card-icon.orange-bg{background:var(--orange);}
 .pl-card-icon.amber-bg{background:#f59e0b;}
 .pl-card-icon.blue-bg{background:#3b82f6;}
@@ -160,7 +158,7 @@ tr:hover td{background:#fdfefe;}
 .pl-card-val.neg{color:#ef4444;}
 .pl-card-val.pos{color:#1a1a2e;}
 
-/* ══ OVERVIEW ══ */
+/* ══ OVERVIEW CARD ══ */
 .ov-card{border:1.5px solid #f0f2f5;border-radius:12px;padding:14px 16px;background:#fff;}
 .ov-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .ov-top h3{font-size:11px;font-weight:800;letter-spacing:.5px;color:#9ca3af;}
@@ -176,16 +174,14 @@ tr:hover td{background:#fdfefe;}
 .cmp-row{display:grid;grid-template-columns:62px 10px 40px 1fr 70px;align-items:center;gap:8px;margin-bottom:10px;}
 .cmp-row:last-child{margin-bottom:0;}
 .dot{width:9px;height:9px;border-radius:50%;}
-.dot.cur{background:var(--orange);}
-.dot.pri{background:#c8cdd5;}
+.dot.cur{background:var(--orange);}.dot.pri{background:#c8cdd5;}
 .yr-lbl{font-size:12px;font-weight:700;}
 .bar-track{height:10px;background:#f0f2f5;border-radius:6px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:6px;transition:width .6s;}
-.bar-fill.cur{background:var(--orange);}
-.bar-fill.pri{background:#d1d5db;}
+.bar-fill.cur{background:var(--orange);}.bar-fill.pri{background:#d1d5db;}
 .bar-val{font-size:12px;color:#9ca3af;text-align:right;}
 
-/* ══ PL SECTIONS ══ */
+/* ══ FINANCE SECTIONS ══ */
 .pl-sec{background:#fff;border:1.5px solid #f0f2f5;border-radius:12px;margin-bottom:14px;overflow:hidden;}
 .pl-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #f7f8fa;background:#fafbfc;}
 .pl-sec-title{font-size:12px;font-weight:800;letter-spacing:.5px;color:#374151;}
@@ -209,32 +205,41 @@ tr:hover td{background:#fdfefe;}
 .net-val.neg{color:#ef4444;}
 .net-val.pos{color:var(--orange);}
 
-/* ══ TOAST ══ */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a2e;color:#fff;border-radius:9px;padding:9px 20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:999;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ══ DATE LABEL ══ */
+.date-lbl{font-size:13px;font-weight:700;color:#8a94a6;letter-spacing:.3px;margin-bottom:20px;}
 
-/* ══ CHAT BUBBLE ══ */
-.chat-fab{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:#6c5ce7;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);}
-.chat-fab svg{color:#fff;}
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a2e;color:#fff;border-radius:9px;padding:9px 20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ══ TAB PANELS ══ */
 .tab-panel{display:none;}.tab-panel.active{display:block;}
 
-/* ══ DATE LABEL ══ */
-.date-lbl{font-size:13px;font-weight:700;color:#8a94a6;letter-spacing:.3px;margin-bottom:20px;}
+/* ══ EXPORT MODAL ══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:800;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:16px;padding:28px;width:340px;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.modal h3{font-size:16px;font-weight:800;margin-bottom:6px;}
+.modal p{font-size:13px;color:#8a94a6;margin-bottom:22px;}
+.modal-btns{display:flex;flex-direction:column;gap:10px;}
+.modal-opt{display:flex;align-items:center;gap:12px;border:1.5px solid #e2e5ea;border-radius:10px;padding:13px 16px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:600;color:#374151;}
+.modal-opt:hover{border-color:var(--orange);background:var(--orange-light);color:var(--orange);}
+.modal-opt svg{color:#9ca3af;flex-shrink:0;}
+.modal-opt:hover svg{color:var(--orange);}
+.modal-cancel{margin-top:12px;width:100%;background:none;border:1.5px solid #e2e5ea;border-radius:9px;padding:10px;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;transition:border-color .15s;}
+.modal-cancel:hover{border-color:#9ca3af;}
 
 @media(max-width:900px){
+  .sidebar{display:none;}
   .pl-summary{grid-template-columns:1fr 1fr;}
-  .filter-panel{min-width:calc(100vw - 48px);}
 }
 </style>
 </head>
 <body>
 
-<!-- ════ TOP HEADER ════ -->
+<!-- ══ TOP HEADER ══ -->
 <div class="top-header">
   <div class="header-icon" id="hdr-icon">
-    <!-- icon changes per tab -->
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>
   </div>
   <div class="header-text">
@@ -242,448 +247,407 @@ tr:hover td{background:#fdfefe;}
     <p id="hdr-sub">View and manage all bank deposits and reconciliations</p>
   </div>
   <div class="header-right">
-    <div class="notif-btn">
+    <div class="notif-btn" title="Notifications">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </div>
-    <div class="user-pill">
-      <div class="user-avatar">AR</div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+</div>
+
+<!-- ══ BODY WRAP ══ -->
+<div class="body-wrap">
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+    <div class="nav-item active" data-tab="bank" onclick="switchTab(this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>
+      Bank Deposits
+    </div>
+    <div class="nav-item" data-tab="rent" onclick="switchTab(this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Rent
+    </div>
+    <div class="nav-item" data-tab="deposits" onclick="switchTab(this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Deposits Held
+    </div>
+    <div class="nav-item" data-tab="finance" onclick="switchTab(this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Finance
+    </div>
+    <div class="nav-item" data-tab="payments" onclick="switchTab(this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      Payments
     </div>
   </div>
-</div>
 
-<!-- ════ TAB BAR ════ -->
-<div class="tabbar-wrap">
-  <div class="tabbar">
-    <div class="tab active" data-tab="bank" data-title="Bank Deposits" data-title-bold="Bank" data-sub="View and manage all bank deposits and reconciliations">Bank Deposits</div>
-    <div class="tab" data-tab="rent" data-title="Rent" data-title-bold="Rent" data-sub="View and track all active, future and past leases">Rent</div>
-    <div class="tab" data-tab="deposits" data-title="Deposits Held" data-title-bold="Deposits" data-sub="Manage and track all security deposits held">Deposits Held</div>
-    <div class="tab" data-tab="pl" data-title="Finance" data-title-bold="Finance" data-sub="Profit and loss overview for all properties">Finance</div>
-    <div class="tab" data-tab="txn" data-title="Payments" data-title-bold="Payments" data-sub="View all payment transactions across properties">Payments</div>
-  </div>
-</div>
+  <!-- ══ MAIN CONTENT ══ -->
+  <div class="main">
 
-<!-- ════ PAGE ════ -->
-<div class="page">
-
-<!-- ══ BANK DEPOSIT ══ -->
-<div class="tab-panel active" id="tab-bank">
-  <div class="toolbar">
-    <div class="filter-wrap" id="fw-bank">
-      <div class="filter-pill" onclick="toggleFilter('fw-bank')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-        Filter...
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="filter-panel">
-        <div class="fp-grid">
-          <div class="fp-full"><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option><option>Green Valley</option></select></div>
-          <div><div class="fp-lbl">Tenant Name</div><select class="fp-sel"><option value="">Select</option><option>CB Tiwari</option><option>Priyanka V.</option></select></div>
-          <div><div class="fp-lbl">Invoice #</div><input class="fp-input" type="text" placeholder="Invoice Id"></div>
-          <div><div class="fp-lbl">Bank Account</div><select class="fp-sel"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
-          <div><div class="fp-lbl">Invoice Type</div><select class="fp-sel"><option value="">Select</option><option>Rent</option><option>Deposit</option><option>Late Fee</option></select></div>
-          <div class="fp-full">
-            <div class="fp-3col">
-              <div><div class="fp-lbl">Date Range</div><select class="fp-sel"><option>Month</option><option>Quarter</option><option>Year</option></select></div>
-              <div><div class="fp-lbl">Select Month</div><select class="fp-sel"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option selected>June</option><option>Jul</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></select></div>
-              <div><div class="fp-lbl">Select Year</div><select class="fp-sel"><option>2026</option><option>2025</option><option>2024</option></select></div>
+    <!-- ████ BANK DEPOSITS ████ -->
+    <div class="tab-panel active" id="tab-bank">
+      <div class="toolbar">
+        <div class="filter-wrap" id="fw-bank">
+          <div class="filter-pill" onclick="toggleFilter('fw-bank')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+            Filter...
+            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="filter-panel">
+            <div class="fp-grid">
+              <div class="fp-full"><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option><option>Green Valley</option></select></div>
+              <div><div class="fp-lbl">Tenant Name</div><select class="fp-sel"><option value="">Select</option><option>CB Tiwari</option><option>Priyanka V.</option></select></div>
+              <div><div class="fp-lbl">Invoice #</div><input class="fp-input" type="text" placeholder="Invoice Id"></div>
+              <div><div class="fp-lbl">Bank Account</div><select class="fp-sel"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
+              <div><div class="fp-lbl">Invoice Type</div><select class="fp-sel"><option value="">Select</option><option>Rent</option><option>Deposit</option><option>Late Fee</option></select></div>
+              <div class="fp-full">
+                <div class="fp-3col">
+                  <div><div class="fp-lbl">Date Range</div><select class="fp-sel"><option>Month</option><option>Quarter</option><option>Year</option></select></div>
+                  <div><div class="fp-lbl">Select Month</div><select class="fp-sel"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option selected>June</option><option>Jul</option><option>Aug</option><option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option></select></div>
+                  <div><div class="fp-lbl">Select Year</div><select class="fp-sel"><option>2026</option><option>2025</option><option>2024</option></select></div>
+                </div>
+              </div>
+              <div class="fp-full">
+                <div class="fp-chk-row"><input type="checkbox" id="cb1" checked><label for="cb1">Include Unmapped transactions</label></div>
+                <div class="fp-chk-row"><input type="checkbox" id="cb2"><label for="cb2">Include Offline Payments Only</label></div>
+              </div>
+            </div>
+            <div class="fp-footer">
+              <button class="clear-btn" onclick="clearFilter('fw-bank')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+              <button class="apply-btn" onclick="closeFilter('fw-bank')">Apply Filters</button>
             </div>
           </div>
-          <div class="fp-full">
-            <div class="fp-chk-row"><input type="checkbox" id="cb1" checked><label for="cb1">Include Unmapped transactions</label></div>
-            <div class="fp-chk-row"><input type="checkbox" id="cb2"><label for="cb2">Include Offline Payments Only</label></div>
+        </div>
+        <button class="export-btn" onclick="openExport('Bank Deposits')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </div>
+      <div class="bd-layout">
+        <div class="bd-table-wrap">
+          <div class="content-card">
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Account Name</th><th>Account Number</th><th>Date of Deposit</th><th>Collected</th><th>Transaction Fee</th><th>Deposited</th><th>Reconciled</th></tr></thead>
+                <tbody><tr><td colspan="7"><div class="empty-state">
+                  <div class="empty-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="empty-title">No Records Found</div>
+                  <div class="empty-sub">Try adjusting your filters or check back later.</div>
+                </div></td></tr></tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <div class="fp-footer">
-          <button class="clear-btn" onclick="clearFilter('fw-bank')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
-          <button class="apply-btn" onclick="closeFilter('fw-bank')">Apply Filters</button>
+        <div class="bd-side">
+          <div class="bd-card orange-card">
+            <div class="bd-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="bd-card-amt">$0.00</div>
+            <div class="bd-card-lbl">PROCESSING</div>
+          </div>
+          <div class="bd-card green-card">
+            <div class="bd-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div class="bd-card-amt">$0.00</div>
+            <div class="bd-card-lbl">TOTAL DEPOSITED</div>
+          </div>
         </div>
       </div>
     </div>
-    <button class="export-btn" onclick="exportReport('bank')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-  <div class="bd-layout">
-    <div class="bd-table-wrap">
+
+    <!-- ████ RENT ████ -->
+    <div class="tab-panel" id="tab-rent">
+      <div class="toolbar">
+        <div class="filter-wrap" id="fw-rent">
+          <div class="filter-pill" onclick="toggleFilter('fw-rent')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+            <span>Filter... <b style="color:#1a1a2e;">Term Status: Active ;</b></span>
+            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="filter-panel" style="min-width:360px;">
+            <div class="fp-grid" style="grid-template-columns:1fr;">
+              <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select></div>
+              <div><div class="fp-lbl">Bank Account</div><select class="fp-sel"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
+              <div>
+                <div class="fp-lbl">Lease Status</div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--orange);">Active</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Future</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Past</label>
+                </div>
+                <div class="fp-chk-row" style="margin-top:10px;"><input type="checkbox" id="rr-arch"><label for="rr-arch">View Archived Leases Only</label></div>
+              </div>
+              <div>
+                <div class="fp-lbl">Property Unit Type</div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Employee</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Down</label>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Model</label>
+                </div>
+              </div>
+            </div>
+            <div class="fp-footer">
+              <button class="clear-btn" onclick="clearFilter('fw-rent')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+              <button class="apply-btn" onclick="closeFilter('fw-rent')">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+        <button class="export-btn" onclick="openExport('Rent Roll')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </div>
+      <div class="subtabs">
+        <div class="stab active" onclick="switchStab(this)">Active Leases</div>
+        <div class="stab" onclick="switchStab(this)">Future Leases</div>
+        <div class="stab" onclick="switchStab(this)">Past Leases</div>
+        <div class="stab" onclick="switchStab(this)">All</div>
+      </div>
       <div class="content-card">
         <div class="tbl-wrap">
           <table>
             <thead><tr>
-              <th>Account Name</th><th>Account Number</th><th>Date of Deposit</th>
-              <th>Collected</th><th>Transaction Fee</th><th>Deposited</th><th>Reconciled</th>
+              <th>Property Details</th><th>Unit</th><th class="sort">Lease Start ⇅</th><th class="sort">Lease End ⇅</th><th>Tenants</th>
+              <th class="sort">Rent ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $14,000)</small></th>
+              <th class="sort">Other Recurring ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $0.00)</small></th>
+              <th class="sort">Total Due ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $240,254)</small></th>
+              <th class="sort">Deposit ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $4,600)</small></th>
+              <th class="sort">Balance Owed ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $178,300)</small></th>
+              <th class="sort">Total Credits ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $0.00)</small></th>
             </tr></thead>
             <tbody>
-              <tr><td colspan="7"><div class="empty-state">
-                <div class="empty-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-                <div class="empty-title">No Records Found</div>
-                <div class="empty-sub">Try adjusting your filters or check back later.</div>
-              </div></td></tr>
+              <tr><td><div class="prop-name">Villa Rock Graden</div><div class="prop-addr">15 Emerson Ave, Mayville, New York 14757</div></td><td>unit 405</td><td>Nov 1, 2025</td><td>Jan 31, 2027</td><td>CB Tiwari ...</td><td>$5,000.00</td><td>$0.00</td><td>$91,500.00</td><td>$600.00</td><td>$50,000.00</td><td>$0.00</td></tr>
+              <tr><td><div class="prop-name">Rental House</div><div class="prop-addr">Pinkham Road, Bristol, Maine 04554</div></td><td>Tower A</td><td>Dec 3, 2025</td><td>Nov 11, 2026</td><td>Priyanka V...</td><td>$4,000.00</td><td>$0.00</td><td>$60,054.00</td><td>$0.00</td><td>$39,600.00</td><td>$0.00</td></tr>
+              <tr><td><div class="prop-name">Ashiyana</div><div class="prop-addr">Carolina Ave NW, Winston-Salem, NC 27101</div></td><td>Ashiyana Suits</td><td>Oct 25, 2025</td><td>Jan 29, 2027</td><td>Niketan C...</td><td>$5,000.00</td><td>$0.00</td><td>$88,700.00</td><td>$4,000.00</td><td>$88,700.00</td><td>$0.00</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="bd-side">
-      <div class="bd-card orange-card">
-        <div class="bd-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div class="bd-card-amt">$0.00</div>
-        <div class="bd-card-lbl">PROCESSING</div>
-      </div>
-      <div class="bd-card green-card">
-        <div class="bd-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <div class="bd-card-amt">$0.00</div>
-        <div class="bd-card-lbl">TOTAL DEPOSITED</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ══ RENT ROLL ══ -->
-<div class="tab-panel" id="tab-rent">
-  <div class="toolbar">
-    <div class="filter-wrap" id="fw-rent">
-      <div class="filter-pill" onclick="toggleFilter('fw-rent')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-        <span>Filter... <b style="color:#1a1a2e;">Term Status: Active ;</b></span>
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="filter-panel" style="min-width:360px;">
-        <div class="fp-grid" style="grid-template-columns:1fr;">
-          <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select></div>
-          <div><div class="fp-lbl">Bank Account</div><select class="fp-sel"><option value="">Select</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
-          <div>
-            <div class="fp-lbl">Lease Status</div>
-            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:2px;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--orange);">Active</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Future</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Past</label>
+    <!-- ████ DEPOSITS HELD ████ -->
+    <div class="tab-panel" id="tab-deposits">
+      <div class="toolbar">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="filter-wrap" id="fw-deposits">
+            <div class="filter-pill" onclick="toggleFilter('fw-deposits')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+              Filter...
+              <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
             </div>
-            <div class="fp-chk-row" style="margin-top:10px;"><input type="checkbox" id="rr-arch"><label for="rr-arch">View Archived Leases Only</label></div>
-          </div>
-          <div>
-            <div class="fp-lbl">Property Unit Type</div>
-            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:2px;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Employee</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Down</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5a7a9a;cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);">Model</label>
+            <div class="filter-panel" style="min-width:460px;">
+              <div class="fp-grid">
+                <div class="fp-full"><div class="fp-lbl">Invoice</div><input class="fp-input" type="text" placeholder="Enter ID"></div>
+                <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>5E</option><option>Ashiyana</option></select></div>
+                <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>5E-212</option><option>Ashiyana Suits</option></select></div>
+                <div><div class="fp-lbl">From</div><input class="fp-input" type="date"></div>
+                <div><div class="fp-lbl">To</div><input class="fp-input" type="date"></div>
+                <div class="fp-full"><div class="fp-lbl">Payment Method</div><select class="fp-sel"><option value="">Select</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select></div>
+              </div>
+              <div class="fp-footer">
+                <button class="clear-btn" onclick="clearFilter('fw-deposits')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+                <button class="apply-btn" onclick="closeFilter('fw-deposits')">Apply Filters</button>
+              </div>
             </div>
           </div>
+          <span class="showing-row">Showing <b>2 of 2</b></span>
         </div>
-        <div class="fp-footer">
-          <button class="clear-btn" onclick="clearFilter('fw-rent')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
-          <button class="apply-btn" onclick="closeFilter('fw-rent')">Apply Filters</button>
+        <button class="export-btn" onclick="openExport('Deposits Held')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </div>
+      <div class="showing-row">(This data is 5 minutes old) <span class="refresh-link" onclick="showToast('Data refreshed!')">Refresh Now</span></div>
+      <div class="content-card">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th class="sort">ID ▼</th><th class="sort">Due On ⇅</th><th class="sort">Property ⇅</th><th class="sort">Property Unit ⇅</th><th class="sort">Amount ⇅</th><th class="sort">Lease End Date ⇅</th><th class="sort">Tenant Name ⇅</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>∨ 11435509</td><td>Oct 28, 2025</td><td>5E</td><td>5E-212</td><td>$2,000.00</td><td>M to M</td><td>Jai Kishan</td><td style="white-space:nowrap;"><button class="act-btn">View</button><button class="act-btn">Return</button><button class="act-btn">Apply</button></td></tr>
+              <tr><td>∨ 11416270</td><td>Oct 31, 2025</td><td>Ashiyana</td><td>Ashiyana Suits</td><td>$4,000.00</td><td>Jan 29, 2027</td><td>Jai Kishan + 1</td><td style="white-space:nowrap;"><button class="act-btn">View</button><button class="act-btn">Return</button><button class="act-btn">Apply</button></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <button class="export-btn" onclick="exportReport('rent')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-  <div class="subtabs">
-    <div class="stab active" onclick="switchStab(this)">Active Leases</div>
-    <div class="stab" onclick="switchStab(this)">Future Leases</div>
-    <div class="stab" onclick="switchStab(this)">Past Leases</div>
-    <div class="stab" onclick="switchStab(this)">All</div>
-  </div>
-  <div class="content-card">
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th>Property Details</th><th>Unit</th>
-          <th class="sort">Lease Start ⇅</th><th class="sort">Lease End ⇅</th>
-          <th>Tenants</th>
-          <th class="sort">Rent ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $14,000)</small></th>
-          <th class="sort">Other Recurring ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $0.00)</small></th>
-          <th class="sort">Total Due ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $240,254)</small></th>
-          <th class="sort">Deposit ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $4,600)</small></th>
-          <th class="sort">Balance Owed ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $178,300)</small></th>
-          <th class="sort">Total Credits ⇅<br><small style="font-weight:400;color:#bbb;">(Total - $0.00)</small></th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td><div class="prop-name">Villa Rock Graden</div><div class="prop-addr">15 Emerson Ave, Mayville, New York 14757</div></td>
-            <td>unit 405</td><td>Nov 1, 2025</td><td>Jan 31, 2027</td><td>CB Tiwari ...</td>
-            <td>$5,000.00</td><td>$0.00</td><td>$91,500.00</td><td>$600.00</td><td>$50,000.00</td><td>$0.00</td>
-          </tr>
-          <tr>
-            <td><div class="prop-name">Rental House</div><div class="prop-addr">Pinkham Road, Bristol, Maine 04554</div></td>
-            <td>Tower A</td><td>Dec 3, 2025</td><td>Nov 11, 2026</td><td>Priyanka V...</td>
-            <td>$4,000.00</td><td>$0.00</td><td>$60,054.00</td><td>$0.00</td><td>$39,600.00</td><td>$0.00</td>
-          </tr>
-          <tr>
-            <td><div class="prop-name">Ashiyana</div><div class="prop-addr">Carolina Ave NW, Winston-Salem, NC 27101</div></td>
-            <td>Ashiyana Suits</td><td>Oct 25, 2025</td><td>Jan 29, 2027</td><td>Niketan C...</td>
-            <td>$5,000.00</td><td>$0.00</td><td>$88,700.00</td><td>$4,000.00</td><td>$88,700.00</td><td>$0.00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
-<!-- ══ DEPOSITS HELD ══ -->
-<div class="tab-panel" id="tab-deposits">
-  <div class="toolbar">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <div class="filter-wrap" id="fw-deposits">
-        <div class="filter-pill" onclick="toggleFilter('fw-deposits')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-          Filter...
-          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-        <div class="filter-panel" style="min-width:460px;">
-          <div class="fp-grid">
-            <div class="fp-full"><div class="fp-lbl">Invoice</div><input class="fp-input" type="text" placeholder="Enter ID"></div>
-            <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>5E</option><option>Ashiyana</option></select></div>
-            <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>5E-212</option><option>Ashiyana Suits</option></select></div>
-            <div><div class="fp-lbl">From</div><input class="fp-input" type="date"></div>
-            <div><div class="fp-lbl">To</div><input class="fp-input" type="date"></div>
-            <div class="fp-full"><div class="fp-lbl">Payment Method</div><select class="fp-sel"><option value="">Select</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select></div>
-          </div>
-          <div class="fp-footer">
-            <button class="clear-btn" onclick="clearFilter('fw-deposits')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
-            <button class="apply-btn" onclick="closeFilter('fw-deposits')">Apply Filters</button>
-          </div>
-        </div>
-      </div>
-      <span class="showing-row">Showing <b>2 of 2</b></span>
-    </div>
-    <button class="export-btn" onclick="exportReport('deposits')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-  <div class="showing-row">(This data is 5 minutes old) <span class="refresh-link" onclick="showToast('Refreshed!')">Refresh Now</span></div>
-  <div class="content-card">
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th class="sort">ID ▼</th><th class="sort">Due On ⇅</th><th class="sort">Property ⇅</th>
-          <th class="sort">Property Unit ⇅</th><th class="sort">Amount ⇅</th>
-          <th class="sort">Lease End Date ⇅</th><th class="sort">Tenant Name ⇅</th><th></th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td>∨ 11435509</td><td>Oct 28, 2025</td><td>5E</td><td>5E-212</td>
-            <td>$2,000.00</td><td>M to M</td><td>Jai Kishan</td>
-            <td style="white-space:nowrap;"><button class="act-btn">View</button><button class="act-btn">Return</button><button class="act-btn">Apply</button></td>
-          </tr>
-          <tr>
-            <td>∨ 11416270</td><td>Oct 31, 2025</td><td>Ashiyana</td><td>Ashiyana Suits</td>
-            <td>$4,000.00</td><td>Jan 29, 2027</td><td>Jai Kishan + 1</td>
-            <td style="white-space:nowrap;"><button class="act-btn">View</button><button class="act-btn">Return</button><button class="act-btn">Apply</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ══ P/L REPORT ══ -->
-<div class="tab-panel" id="tab-pl">
-  <div class="toolbar">
-    <div class="filter-wrap" id="fw-pl">
-      <div class="filter-pill" onclick="toggleFilter('fw-pl')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-        Filter
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="filter-panel" style="min-width:540px;">
-        <div class="fp-grid">
-          <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option></select></div>
-          <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>Unit 101</option><option>Unit 201</option></select></div>
-          <div class="fp-full"><div class="fp-lbl">Taxable Entity</div><select class="fp-sel" style="background-color:#fafbfc;"><option>All</option><option>Entity A</option><option>Entity B</option></select></div>
-          <div class="fp-full"><div class="fp-lbl">Bank Account</div><select class="fp-sel" style="background-color:#fafbfc;"><option>All</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
-          <div class="fp-full">
-            <div class="fp-2col">
-              <div><div class="fp-lbl">Date Range</div><select class="fp-sel" id="pl-range" onchange="updatePlDate()"><option value="year">Year</option><option value="quarter">Quarter</option><option value="month">Month</option></select></div>
-              <div><div class="fp-lbl blue">Select Year</div><select class="fp-sel" id="pl-year" onchange="updatePlDate()"><option>2026</option><option>2025</option><option>2024</option></select></div>
-            </div>
-          </div>
-        </div>
-        <div class="fp-footer">
-          <button class="clear-btn" onclick="clearFilter('fw-pl')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
-          <button class="apply-btn" onclick="closeFilter('fw-pl');updatePlDate()">Apply Filters</button>
-        </div>
-      </div>
-    </div>
-    <button class="export-btn" onclick="exportReport('pl')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
-    </button>
-  </div>
-  <div class="date-lbl" id="pl-date-lbl">JANUARY 1, 2026 – DECEMBER 31, 2026</div>
-
-  <div class="pl-summary">
-    <div class="pl-card">
-      <div class="pl-card-icon orange-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg></div>
-      <div class="pl-card-lbl">INCOME</div>
-      <div class="pl-card-val pos" id="pl-v-inc">$0.00</div>
-    </div>
-    <div class="pl-card">
-      <div class="pl-card-icon amber-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h14a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/></svg></div>
-      <div class="pl-card-lbl">EXPENSES</div>
-      <div class="pl-card-val neg" id="pl-v-exp">($0.00)</div>
-    </div>
-    <div class="pl-card">
-      <div class="pl-card-icon blue-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/></svg></div>
-      <div class="pl-card-lbl">NET PROFIT/LOSS</div>
-      <div class="pl-card-val" id="pl-v-net">$0.00</div>
-    </div>
-    <div class="ov-card">
-      <div class="ov-top">
-        <h3>OVERVIEW</h3>
-        <div class="mini-dd" id="dd-period">
-          <div class="mini-btn" onclick="toggleMini('dd-period')">
-            <span id="period-lbl">Same Period Last Year</span>
+    <!-- ████ FINANCE (P/L) ████ -->
+    <div class="tab-panel" id="tab-finance">
+      <div class="toolbar">
+        <div class="filter-wrap" id="fw-finance">
+          <div class="filter-pill" onclick="toggleFilter('fw-finance')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+            Filter
             <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-          <div class="mini-menu">
-            <div class="mini-item" onclick="setPeriod('Same Period Last Year','2025')">Same Period Last Year</div>
-            <div class="mini-item" onclick="setPeriod('Previous Quarter','Q3 2025')">Previous Quarter</div>
-            <div class="mini-item" onclick="setPeriod('Previous Month','Dec 2025')">Previous Month</div>
-            <div class="mini-sep"></div>
-            <div class="mini-item" onclick="setPeriod('No Comparison','—')">No Comparison</div>
+          <div class="filter-panel" style="min-width:540px;">
+            <div class="fp-grid">
+              <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Sunrise Apartments</option><option>Maple Street</option></select></div>
+              <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>Unit 101</option><option>Unit 201</option></select></div>
+              <div class="fp-full"><div class="fp-lbl">Taxable Entity</div><select class="fp-sel" style="background-color:#fafbfc;"><option>All</option><option>Entity A</option><option>Entity B</option></select></div>
+              <div class="fp-full"><div class="fp-lbl">Bank Account</div><select class="fp-sel" style="background-color:#fafbfc;"><option>All</option><option>Chase ••4521</option><option>Wells Fargo ••8832</option></select></div>
+              <div class="fp-full">
+                <div class="fp-2col">
+                  <div><div class="fp-lbl">Date Range</div><select class="fp-sel" id="pl-range" onchange="updatePlDate()"><option value="year">Year</option><option value="quarter">Quarter</option><option value="month">Month</option></select></div>
+                  <div><div class="fp-lbl blue">Select Year</div><select class="fp-sel" id="pl-year" onchange="updatePlDate()"><option>2026</option><option>2025</option><option>2024</option></select></div>
+                </div>
+              </div>
+            </div>
+            <div class="fp-footer">
+              <button class="clear-btn" onclick="clearFilter('fw-finance')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+              <button class="apply-btn" onclick="closeFilter('fw-finance');updatePlDate()">Apply Filters</button>
+            </div>
           </div>
         </div>
+        <button class="export-btn" onclick="openExport('Finance Report')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
       </div>
-      <div class="cmp-row">
-        <span class="bar-val" id="bsc" style="text-align:right;">$0.00</span>
-        <span class="dot cur"></span><span class="yr-lbl">2026</span>
-        <div class="bar-track"><div class="bar-fill cur" id="bc" style="width:0%"></div></div>
-        <span class="bar-val" id="bec">$0.00</span>
+      <div class="date-lbl" id="pl-date-lbl">JANUARY 1, 2026 – DECEMBER 31, 2026</div>
+      <div class="pl-summary">
+        <div class="pl-card"><div class="pl-card-icon orange-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg></div><div class="pl-card-lbl">INCOME</div><div class="pl-card-val pos" id="pl-v-inc">$0.00</div></div>
+        <div class="pl-card"><div class="pl-card-icon amber-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h14a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 8l4-4h7"/></svg></div><div class="pl-card-lbl">EXPENSES</div><div class="pl-card-val neg" id="pl-v-exp">($0.00)</div></div>
+        <div class="pl-card"><div class="pl-card-icon blue-bg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/></svg></div><div class="pl-card-lbl">NET PROFIT/LOSS</div><div class="pl-card-val" id="pl-v-net">$0.00</div></div>
+        <div class="ov-card">
+          <div class="ov-top"><h3>OVERVIEW</h3>
+            <div class="mini-dd" id="dd-period">
+              <div class="mini-btn" onclick="toggleMini('dd-period')"><span id="period-lbl">Same Period Last Year</span><svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="mini-menu">
+                <div class="mini-item" onclick="setPeriod('Same Period Last Year','2025')">Same Period Last Year</div>
+                <div class="mini-item" onclick="setPeriod('Previous Quarter','Q3 2025')">Previous Quarter</div>
+                <div class="mini-item" onclick="setPeriod('Previous Month','Dec 2025')">Previous Month</div>
+                <div class="mini-sep"></div>
+                <div class="mini-item" onclick="setPeriod('No Comparison','—')">No Comparison</div>
+              </div>
+            </div>
+          </div>
+          <div class="cmp-row"><span class="bar-val" id="bsc" style="text-align:right;">$0.00</span><span class="dot cur"></span><span class="yr-lbl">2026</span><div class="bar-track"><div class="bar-fill cur" id="bc" style="width:0%"></div></div><span class="bar-val" id="bec">$0.00</span></div>
+          <div class="cmp-row"><span class="bar-val" id="bsp" style="text-align:right;">$0.00</span><span class="dot pri"></span><span class="yr-lbl" id="prior-yr">2025</span><div class="bar-track"><div class="bar-fill pri" id="bp" style="width:0%"></div></div><span class="bar-val" id="bep">$0.00</span></div>
+        </div>
       </div>
-      <div class="cmp-row">
-        <span class="bar-val" id="bsp" style="text-align:right;">$0.00</span>
-        <span class="dot pri"></span><span class="yr-lbl" id="prior-yr">2025</span>
-        <div class="bar-track"><div class="bar-fill pri" id="bp" style="width:0%"></div></div>
-        <span class="bar-val" id="bep">$0.00</span>
+      <div class="pl-sec">
+        <div class="pl-sec-hdr"><span class="pl-sec-title">INCOME</span><button class="add-row-btn" onclick="addPlRow('income')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Income</button></div>
+        <div id="pl-inc-rows"></div>
+        <div class="pl-total-row"><span class="pl-total" id="pl-inc-tot">$0.00</span></div>
+      </div>
+      <div class="pl-sec">
+        <div class="pl-sec-hdr"><span class="pl-sec-title">EXPENSES</span><button class="add-row-btn" onclick="addPlRow('expense')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Expense</button></div>
+        <div id="pl-exp-rows"></div>
+        <div class="pl-total-row"><span class="pl-total neg" id="pl-exp-tot">($0.00)</span></div>
+      </div>
+      <div class="net-card"><span class="net-lbl">NET PROFIT / LOSS</span><span class="net-val" id="pl-net">$0.00</span></div>
+    </div>
+
+    <!-- ████ PAYMENTS ████ -->
+    <div class="tab-panel" id="tab-payments">
+      <div class="toolbar">
+        <div class="filter-wrap" id="fw-payments">
+          <div class="filter-pill" onclick="toggleFilter('fw-payments')" style="min-width:140px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
+            Filters
+            <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="filter-panel" style="min-width:500px;">
+            <div class="fp-grid">
+              <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select></div>
+              <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>unit 405</option><option>Tower A</option><option>Ashiyana Suits</option></select></div>
+              <div><div class="fp-lbl">Tenant</div><select class="fp-sel"><option value="">Select</option><option>CB Tiwari</option><option>Social Code</option></select></div>
+              <div><div class="fp-lbl">Payment Status</div><select class="fp-sel"><option value="">All</option><option>Success</option><option>Pending</option><option>Failed</option></select></div>
+              <div><div class="fp-lbl">Payment Mode</div><select class="fp-sel"><option value="">All</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select></div>
+              <div><div class="fp-lbl">Date Range</div><select class="fp-sel"><option>Month</option><option>Quarter</option><option>Year</option></select></div>
+            </div>
+            <div class="fp-footer">
+              <button class="clear-btn" onclick="clearFilter('fw-payments')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
+              <button class="apply-btn" onclick="closeFilter('fw-payments')">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+        <button class="export-btn" onclick="openExport('Payments')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Report
+        </button>
+      </div>
+      <div class="showing-row">Showing <b>9 of 9</b></div>
+      <div class="content-card">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th class="sort">Property/Unit ⇅</th><th class="sort">Invoice ID ⇅</th><th class="sort">Tenant ⇅</th>
+              <th class="sort">Payment Date ⇅</th><th class="sort">Payment Status ⇅</th><th class="sort">Due Date ⇅</th>
+              <th class="sort">Transaction Amount ⇅</th><th class="sort">Initial Invoice Amount ⇅</th>
+              <th class="sort">Amount Deposited ⇅</th><th class="sort">Remaining After Payment ⇅</th><th class="sort">Payment Mode ⇅</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774141</td><td>CB Tiwari</td><td>Jun 20, 2026</td><td><span class="badge success">Success</span></td><td>Mar 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$3,500.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774150</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Dec 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774146</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Aug 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774148</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Oct 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774149</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Nov 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774144</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jun 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774145</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jul 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774143</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>May 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$0.00</td><td>Cash</td></tr>
+              <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774142</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Sep 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="pl-sec">
-    <div class="pl-sec-hdr">
-      <span class="pl-sec-title">INCOME</span>
-      <button class="add-row-btn" onclick="addPlRow('income')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Income</button>
+  </div><!-- /main -->
+</div><!-- /body-wrap -->
+
+<!-- ══ EXPORT MODAL ══ -->
+<div class="modal-overlay" id="exportModal" onclick="if(event.target===this)closeExport()">
+  <div class="modal">
+    <h3>Export <span id="export-modal-title"></span></h3>
+    <p>Choose a format to export your report</p>
+    <div class="modal-btns">
+      <div class="modal-opt" onclick="doExport('csv')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+        Export as CSV
+      </div>
+      <div class="modal-opt" onclick="doExport('print')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><rect x="6" y="17" width="12" height="5"/><path d="M6 12H4a2 2 0 0 0-2 2v3h4m14-5h2a2 2 0 0 1 2 2v3h-4"/></svg>
+        Print Report
+      </div>
+      <div class="modal-opt" onclick="doExport('copy')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Clipboard
+      </div>
     </div>
-    <div id="pl-inc-rows"></div>
-    <div class="pl-total-row"><span class="pl-total" id="pl-inc-tot">$0.00</span></div>
-  </div>
-
-  <div class="pl-sec">
-    <div class="pl-sec-hdr">
-      <span class="pl-sec-title">EXPENSES</span>
-      <button class="add-row-btn" onclick="addPlRow('expense')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Add Expense</button>
-    </div>
-    <div id="pl-exp-rows"></div>
-    <div class="pl-total-row"><span class="pl-total neg" id="pl-exp-tot">($0.00)</span></div>
-  </div>
-
-  <div class="net-card">
-    <span class="net-lbl">NET PROFIT / LOSS</span>
-    <span class="net-val" id="pl-net">$0.00</span>
+    <button class="modal-cancel" onclick="closeExport()">Cancel</button>
   </div>
 </div>
 
-<!-- ══ TRANSACTIONS ══ -->
-<div class="tab-panel" id="tab-txn">
-  <div class="toolbar">
-    <div class="filter-wrap" id="fw-txn">
-      <div class="filter-pill" onclick="toggleFilter('fw-txn')" style="min-width:140px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V20l-4 2v-9.5z"/></svg>
-        Filters
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="filter-panel" style="min-width:500px;">
-        <div class="fp-grid">
-          <div><div class="fp-lbl">Property</div><select class="fp-sel"><option value="">Select</option><option>Villa Rock Graden</option><option>Rental House</option><option>Ashiyana</option></select></div>
-          <div><div class="fp-lbl">Unit</div><select class="fp-sel"><option value="">Select</option><option>unit 405</option><option>Tower A</option><option>Ashiyana Suits</option></select></div>
-          <div><div class="fp-lbl">Tenant</div><select class="fp-sel"><option value="">Select</option><option>CB Tiwari</option><option>Social Code</option></select></div>
-          <div><div class="fp-lbl">Payment Status</div><select class="fp-sel"><option value="">All</option><option>Success</option><option>Pending</option><option>Failed</option></select></div>
-          <div><div class="fp-lbl">Payment Mode</div><select class="fp-sel"><option value="">All</option><option>Cash</option><option>Bank Transfer</option><option>Cheque</option></select></div>
-          <div><div class="fp-lbl">Date Range</div><select class="fp-sel"><option>Month</option><option>Quarter</option><option>Year</option></select></div>
-        </div>
-        <div class="fp-footer">
-          <button class="clear-btn" onclick="clearFilter('fw-txn')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Clear Filters</button>
-          <button class="apply-btn" onclick="closeFilter('fw-txn')">Apply Filters</button>
-        </div>
-      </div>
-    </div>
-    <button class="export-btn" onclick="exportReport('txn')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export Report
-    </button>
-  </div>
-  <div class="showing-row">Showing <b>30 of 24</b></div>
-  <div class="content-card">
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th class="sort">Property/Unit ⇅</th><th class="sort">Invoice ID ⇅</th>
-          <th class="sort">Tenant ⇅</th><th class="sort">Payment Date ⇅</th>
-          <th class="sort">Payment Status ⇅</th><th class="sort">Due Date ⇅</th>
-          <th class="sort">Transaction Amount ⇅</th><th class="sort">Initial Invoice Amount ⇅</th>
-          <th class="sort">Amount Deposited ⇅</th><th class="sort">Remaining due after payment ⇅</th>
-          <th class="sort">Payment Mode ⇅</th>
-        </tr></thead>
-        <tbody>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774141</td><td>CB Tiwari</td><td>Jun 20, 2026</td><td><span class="badge success">Success</span></td><td>Mar 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$3,500.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774150</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Dec 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774146</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Aug 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774148</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Oct 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774149</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Nov 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774144</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jun 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774145</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Jul 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774143</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>May 05, 2026</td><td>$1,000.00</td><td>$5,000.00</td><td>$1,000.00</td><td>$0.00</td><td>Cash</td></tr>
-          <tr><td><div class="prop-name">Villa Rock...</div><div class="prop-addr">unit 405</div></td><td>12774142</td><td>Social Code...</td><td>Jun 15, 2026</td><td><span class="badge success">Success</span></td><td>Sep 05, 2026</td><td>$5,000.00</td><td>$5,000.00</td><td>$5,000.00</td><td>$0.00</td><td>Cash</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-</div><!-- /page -->
-
-<div class="chat-fab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
 <div class="toast" id="toast"></div>
 
+<!-- ══ TAB META ══ -->
 <script>
-// ── Tab meta ──
 const tabMeta = {
-  bank:     {bold:'Bank',      rest:' Deposits',    sub:'View and manage all bank deposits and reconciliations',    icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>'},
-  rent:     {bold:'Rent',      rest:'',             sub:'View and track all active, future and past leases',        icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'},
-  deposits: {bold:'Deposits',  rest:' Held',        sub:'Manage and track all security deposits held',              icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'},
-  pl:       {bold:'Finance',   rest:'',             sub:'Profit and loss overview for all properties',              icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
-  txn:      {bold:'Payments',  rest:'',             sub:'View all payment transactions across properties',           icon:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>'},
+  bank:     {bold:'Bank',      rest:' Deposits',   sub:'View and manage all bank deposits and reconciliations'},
+  rent:     {bold:'Rent',      rest:' Roll',        sub:'View and track all active, future and past leases'},
+  deposits: {bold:'Deposits',  rest:' Held',        sub:'Manage and track all security deposits held'},
+  finance:  {bold:'Finance',   rest:' Report',      sub:'Profit and loss overview for all properties'},
+  payments: {bold:'Payments',  rest:'',             sub:'View all payment transactions across properties'},
 };
 
-// ── Tab switch ──
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    const key = tab.dataset.tab;
-    document.getElementById('tab-'+key).classList.add('active');
-    closeAllFilters();
-    const m = tabMeta[key];
-    document.getElementById('hdr-icon').innerHTML = m.icon;
-    document.getElementById('hdr-title').innerHTML = `<span class="org">${m.bold}</span>${m.rest}`;
-    document.getElementById('hdr-sub').textContent = m.sub;
-  });
-});
+function switchTab(el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const key=el.dataset.tab;
+  document.getElementById('tab-'+key).classList.add('active');
+  closeAllFilters();
+  const m=tabMeta[key];
+  document.getElementById('hdr-title').innerHTML=`<span class="org">${m.bold}</span>${m.rest}`;
+  document.getElementById('hdr-sub').textContent=m.sub;
+}
 
 function switchStab(el){
   el.closest('.subtabs').querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
   el.classList.add('active');
 }
 
-// ── Filter logic ──
-document.addEventListener('click', e=>{
+/* ── Filter close on outside click ── */
+document.addEventListener('click',e=>{
   document.querySelectorAll('.filter-wrap').forEach(fw=>{
     if(!fw.contains(e.target)) fw.classList.remove('filter-open');
   });
@@ -708,7 +672,7 @@ function clearFilter(id){
   showToast('Filters cleared');
 }
 
-// ── Mini dropdown ──
+/* ── Mini dropdown (Overview) ── */
 function toggleMini(id){
   event.stopPropagation();
   const el=document.getElementById(id);
@@ -723,7 +687,7 @@ function setPeriod(lbl,yr){
   recalcPL();
 }
 
-// ── PL date label ──
+/* ── Finance date label ── */
 function updatePlDate(){
   const yr=document.getElementById('pl-year').value;
   const rng=document.getElementById('pl-range').value;
@@ -734,13 +698,13 @@ function updatePlDate(){
   document.getElementById('pl-date-lbl').textContent=l;
 }
 
-// ── PL data ──
+/* ── Finance P/L data ── */
 let plInc=[{id:1,name:'Rent',amt:69500},{id:2,name:'Late Fee Charge',amt:23600},{id:3,name:'Water',amt:454}];
 let plExp=[{id:4,name:'Advertising',amt:100},{id:5,name:'Appliance',amt:200}];
 let plId=6, plPrior=0;
 
 function $f(n){ return '$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
-function fD(n){ const s=$f(n); return n<0?'('+s+')':s; }
+function fD(n){ return n<0?'('+$f(n)+')':$f(n); }
 function pN(s){ return parseFloat(s.replace(/[$,()]/g,''))||0; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
@@ -760,9 +724,15 @@ function renderPL(type){
 function plFmt(inp,t,id){ const r=(t==='income'?plInc:plExp).find(x=>x.id===id); if(r&&r.amt>0) inp.value=t==='expense'?'('+$f(r.amt)+')':$f(r.amt); }
 function plName(t,id,v){ const r=(t==='income'?plInc:plExp).find(x=>x.id===id); if(r) r.name=v; }
 function plAmt(t,id,v){ const r=(t==='income'?plInc:plExp).find(x=>x.id===id); if(r){r.amt=pN(v);recalcPL();} }
-function addPlRow(t){ (t==='income'?plInc:plExp).push({id:plId++,name:'',amt:0}); renderPL(t); document.getElementById(t==='income'?'pl-inc-rows':'pl-exp-rows').lastElementChild.querySelector('.pl-name').focus(); }
-function plDel(t,id){ if(t==='income') plInc=plInc.filter(r=>r.id!==id); else plExp=plExp.filter(r=>r.id!==id); renderPL(t); }
-
+function addPlRow(t){
+  (t==='income'?plInc:plExp).push({id:plId++,name:'',amt:0});
+  renderPL(t);
+  document.getElementById(t==='income'?'pl-inc-rows':'pl-exp-rows').lastElementChild.querySelector('.pl-name').focus();
+}
+function plDel(t,id){
+  if(t==='income') plInc=plInc.filter(r=>r.id!==id); else plExp=plExp.filter(r=>r.id!==id);
+  renderPL(t);
+}
 function recalcPL(){
   const inc=plInc.reduce((s,r)=>s+r.amt,0);
   const exp=plExp.reduce((s,r)=>s+r.amt,0);
@@ -784,81 +754,48 @@ function recalcPL(){
   ['bsp','bep'].forEach(id=>document.getElementById(id).textContent=fD(plPrior));
 }
 
-// ── Toast ──
-function csvCell(value){
-  const text=String(value ?? '').replace(/\r?\n|\r/g,' ').trim();
-  return `"${text.replace(/"/g,'""')}"`;
+/* ── Export Modal ── */
+let currentExportLabel='';
+function openExport(label){
+  currentExportLabel=label;
+  document.getElementById('export-modal-title').textContent=label;
+  document.getElementById('exportModal').classList.add('show');
 }
+function closeExport(){ document.getElementById('exportModal').classList.remove('show'); }
 
-function downloadCsv(filename, rows){
-  const csv=rows.map(row=>row.map(csvCell).join(',')).join('\r\n');
-  const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
-  link.href=url;
-  link.download=filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-}
-
-function tableToRows(panelId){
-  const panel=document.getElementById('tab-'+panelId);
-  const table=panel ? panel.querySelector('table') : null;
-  if(!table) return [];
-
-  const headers=Array.from(table.querySelectorAll('thead th'))
-    .map(th=>th.textContent.replace(/\s+/g,' ').trim())
-    .filter(Boolean);
-
-  const bodyRows=Array.from(table.querySelectorAll('tbody tr'))
-    .map(tr=>{
-      const cells=Array.from(tr.children);
-      if(cells.length===1){
-        const emptyState=tr.querySelector('.empty-state');
-        if(emptyState) return [emptyState.textContent.replace(/\s+/g,' ').trim()];
-      }
-      return cells.map(td=>td.textContent.replace(/\s+/g,' ').trim());
-    })
-    .filter(row=>row.length && row.some(Boolean));
-
-  return headers.length ? [headers, ...bodyRows] : bodyRows;
-}
-
-function financeRows(){
-  const rows=[['Section','Name','Amount']];
-  plInc.forEach(item=>rows.push(['Income', item.name || 'Untitled', $f(item.amt)]));
-  rows.push(['Income Total','',document.getElementById('pl-inc-tot').textContent]);
-  plExp.forEach(item=>rows.push(['Expense', item.name || 'Untitled', item.amt>0 ? '('+$f(item.amt)+')' : '$0.00']));
-  rows.push(['Expense Total','',document.getElementById('pl-exp-tot').textContent]);
-  rows.push(['Net Profit / Loss','',document.getElementById('pl-net').textContent]);
-  rows.push(['Date Range','',document.getElementById('pl-date-lbl').textContent]);
-  return rows;
-}
-
-function exportReport(panelId){
-  const fileMap={
-    bank:'deposits',
-    rent:'rent',
-    deposits:'deposits-held',
-    pl:'finance',
-    txn:'payments'
-  };
-  const rows=panelId==='pl' ? financeRows() : tableToRows(panelId);
-  if(!rows.length){
-    showToast('Nothing to export');
+function doExport(type){
+  closeExport();
+  if(type==='print'){ window.print(); return; }
+  if(type==='csv'){
+    let csv='';
+    if(currentExportLabel.includes('Finance')){
+      csv='Category,Name,Amount\n';
+      plInc.forEach(r=>csv+=`Income,"${r.name}",${r.amt.toFixed(2)}\n`);
+      plExp.forEach(r=>csv+=`Expense,"${r.name}",-${r.amt.toFixed(2)}\n`);
+      const inc=plInc.reduce((s,r)=>s+r.amt,0);
+      const exp=plExp.reduce((s,r)=>s+r.amt,0);
+      csv+=`\nTotal Income,,${inc.toFixed(2)}\nTotal Expenses,,-${exp.toFixed(2)}\nNet Profit/Loss,,${(inc-exp).toFixed(2)}`;
+    } else {
+      csv=`${currentExportLabel} Export\nGenerated: ${new Date().toLocaleDateString()}\n\nNo data available for CSV export in this demo.`;
+    }
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download=currentExportLabel.toLowerCase().replace(/\s+/g,'_')+'.csv';
+    a.click();
+    showToast('CSV downloaded ✓');
     return;
   }
-  const dateStamp=new Date().toISOString().slice(0,10);
-  downloadCsv(`${fileMap[panelId] || panelId}-${dateStamp}.csv`, rows);
-  showToast('Export downloaded');
+  if(type==='copy'){
+    const text=`${currentExportLabel}\nExported: ${new Date().toLocaleDateString()}\n\nSee the page for full data.`;
+    navigator.clipboard.writeText(text).then(()=>showToast('Copied to clipboard ✓'));
+  }
 }
 
+/* ── Toast ── */
 let tt;
-function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2200); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2400); }
 
-// ── Init ──
+/* ── Init ── */
 renderPL('income'); renderPL('expense');
 </script>
 </body>
